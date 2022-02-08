@@ -1,0 +1,15 @@
+/*
+* Name: Rohan Kaicker
+* Seneca Email: rkaicker@myseneca.ca
+* Seneca Student ID: 119070217
+* Date: January 23, 2022
+*/
+
+One of the things I implemented in this lab was the idea of external linkage to utilize global variables. 
+Mainly, I declared g_taxrate and g_dailydiscount to be global variables with external linkage (to be used in other "translation units"), by declaring them with the keyword "extern", in my foodorder header file. 
+For internal linkage, this was implemented in my FoodOrder::display() function, where I declared the counter variable with the keyword "static". 
+This meant that the variable was only accessible within the function, but since it has static duration, the variable would only be destroyed when the program is finished.
+So for each run of my display() function, the variable was incremented by 1, and the program would remember this value until it was done. 
+
+To upgrade my program for part 2, I simply used the techniques we had learned back in OOP244. 
+I would have to use dynamic memory allocation for my m_foodDescription, and then I would have to use the same basic techniques to determine what size to allocate the array to based on the string that had been read. 
