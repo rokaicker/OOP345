@@ -1,0 +1,11 @@
+﻿  foodorder.cpp
+C:\Users\Rohan\Documents\OOP345\OOP345Workshops\OOP-Workshops\WS01\part 1\W1P1\foodorder.h(24,8): error C2143: syntax error: missing ';' before 'std::istream'
+  w1_p1.cpp
+C:\Users\Rohan\Documents\OOP345\OOP345Workshops\OOP-Workshops\WS01\part 1\W1P1\foodorder.h(24,8): error C2143: syntax error: missing ';' before 'std::istream'
+C:\Users\Rohan\Documents\OOP345\OOP345Workshops\OOP-Workshops\WS01\part 1\W1P1\w1_p1.cpp(97,19): error C2660: 'sdds::FoodOrder::display': function does not take 0 arguments
+C:\Users\Rohan\Documents\OOP345\OOP345Workshops\OOP-Workshops\WS01\part 1\W1P1\foodorder.h(26,17): message : see declaration of 'sdds::FoodOrder::display'
+C:\Users\Rohan\Documents\OOP345\OOP345Workshops\OOP-Workshops\WS01\part 1\W1P1\w1_p1.cpp(101,27): error C2660: 'sdds::FoodOrder::display': function does not take 0 arguments
+C:\Users\Rohan\Documents\OOP345\OOP345Workshops\OOP-Workshops\WS01\part 1\W1P1\foodorder.h(26,17): message : see declaration of 'sdds::FoodOrder::display'
+C:\Users\Rohan\Documents\OOP345\OOP345Workshops\OOP-Workshops\WS01\part 1\W1P1\w1_p1.cpp(112,37): error C2660: 'sdds::FoodOrder::display': function does not take 0 arguments
+C:\Users\Rohan\Documents\OOP345\OOP345Workshops\OOP-Workshops\WS01\part 1\W1P1\foodorder.h(26,17): message : see declaration of 'sdds::FoodOrder::display'
+  Generating Code...
