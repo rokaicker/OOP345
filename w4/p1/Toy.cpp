@@ -14,26 +14,28 @@ namespace sdds{
         int endPos = 0;
         std::string tempStr = toy;
         std::string delim = ":";
-
+        std::string innerTempStr;
         for (int i = 0; i < 4; i++){
             endPos = tempStr.find(delim);
+            innerTempStr = tempStr.substr(0,endPos);
+            if(innerTempStr[0] == ' ' ){
+                innerTempStr.erase(0,1);
+            } else if (innerTempStr.back() == ' '){
+                innerTempStr.pop_back();
+            }
             switch(i){
                 case 0:
-                    m_orderID = std::stoi(tempStr.substr(0,endPos));
-                    std::cout << m_orderID;
+                    m_orderID = std::stoi(innerTempStr);
                     break;
                 case 1:
-                    m_name = tempStr.substr(0,endPos);
-                    std::cout << m_name;
+                    m_name = innerTempStr;
                     break;
                 case 2:
-                    m_numItems = std::stoi(tempStr.substr(0,endPos));
-                    std::cout << m_numItems;
+                    m_numItems = std::stoi(innerTempStr);
                     break;
                 case 3:
-                    int finalPos = tempStr.find('\n');
-                    m_price = std::stod(tempStr.substr(0,finalPos));
-                    std::cout << m_price;
+                    int finalPos = innerTempStr.find('\n');
+                    m_price = std::stod(innerTempStr.substr(0,finalPos));
                     break;
             }
             tempStr.erase(0,endPos + 1);
