@@ -10,4 +10,6 @@
 
 namespace sdds{
     
+    unsigned Child::CALL_CNT = 0;
+
 }

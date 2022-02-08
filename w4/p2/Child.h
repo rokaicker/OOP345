@@ -9,9 +9,20 @@
 
 #ifndef CHILD_H
 #define CHILD_H
+#include "Toy.h"
 
 namespace sdds{
-    
+    class Child{
+        std::string m_name{};
+        unsigned age{};
+        const sdds::Toy** m_childArray{};
+        static unsigned CALL_CNT;
+    public:
+        Child(std::string name, int age, const Toy* toys[], size_t count);
+        size_t size() const;
+        friend std::ostream& operator<<(std::ostream& os, const Child& C);
+
+    };
 }
 
 #endif
