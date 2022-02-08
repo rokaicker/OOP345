@@ -1,0 +1,27 @@
+/*
+* Name: Rohan Kaicker
+* Seneca Email: rkaicker@myseneca.ca
+* Seneca Student ID: 119070217
+* Date: February 6, 2022
+*
+* I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
+*/
+
+As specified in the workshop, templates are best to be defined in the header files, instead of being split up into .h and .cpp files.
+When the compiler needs to use the template, it needs to know both the template definition and the template types to instantiate a function/ class based on the template.
+As the compiler is compiling the code involves the main() function which may have instances of the template called, it will try to compile them, but the function/ class definitions will be incomplete. 
+Then when the compiler gets to the .cpp file that contains the template definitions, it will have no way of linking the template definition to the instances called in the main() function, and thus this will create linker errors. 
+
+I had to add a few extra member/ helper functions to my Pair module. Namely, these were:
+
+	1) Member Function: void displayPair(std::ostream& os) const;
+	2) Helper Function: std::ostream& operator<<(std::ostream& os, const Pair& P);
+	3) bool operator==(const Pair& P) const;
+
+The first two I required to be able to use a "Pair" object with the "<<" operator, and output the Pair Key/ Value to the ostream, in the proper format. 
+The bool operator== was required for the "Set" module, where we have to compare all the items in the collection with the object that we want to add. 
+This meant that we had to overload the == operator to be able compare Pair objects (which are deemed to be equal if they have the same key, even if their values are different).
+
+Overall this lab was extremely helpful in expanding my knowledge of templates, and how to implement template specializations and how inheritance works with template base classes. 
+
+
