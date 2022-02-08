@@ -1,0 +1,39 @@
+/*
+* Name: Rohan Kaicker
+* Seneca Email: rkaicker@myseneca.ca
+* Seneca Student ID: 119070217
+* Date: January 30, 2022
+*
+* I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
+*/
+
+In this lab, the main new concept I learned and implemented was the idea of using move constructors/ assignment operators.
+As we've learned, move operations differ from copy operations in that instead of creating entirely new "resources" like in copy operations, the resources are essentially transferred over from the original object to the new one. 
+This significantly reduces execution time for code, and also reduces memory requirements. One of the differences is that move operations use the r-value references vs l-value references in copy operations. 
+In my execution the copy constructor and copy assignment operations took over 4E7 nanoseconds (0.04 seconds), where as the move constructor and move assignment operations took just 200 nanoseconds (2E-7 seconds). 
+This is such a massive percentage difference, and this would make a massive difference in large scale programs. 
+
+One of the areas I did run into errors was when I was initially trying to run my program for Part 2, I would get errors once the move operations had started.
+I initially thought I had implemented my move operations incorrectly, but through debugging, I realized it was because in w2_p2.cpp line 102, we use the copy assignment operator on protein_DBA to assign itself. 
+This was causing me errors because I've been used to putting in the logic in my copy assignment operators to delete all resources if we are assigning something to itself, this is shown below:
+
+ProteinDatabase& ProteinDatabase::operator=(const PRoteinDatabase& PD){
+		if (this != &PD) {
+			delete[] m_proteinArray;
+			m_proteinCount = PD.size();
+			m_proteinArray = new std::string[m_proteinCount];
+			for (int i = 0; i < m_proteinCount; i++) {
+				m_proteinArray[i] = PD[i];
+			}
+		}
+		else {
+			delete[] m_proteinArray;
+			m_proteinArray = nullptr;
+			m_proteinCount = 0;
+		}
+		return *this;
+}
+
+Basically as shown in the "else" portion of my code above, I believe in a workshop from OOP244 it had asked us to check if the parameter object was equivalent to "this" object, and if it was to delete all resources and set it to a safe empty state.
+Once I removed the "else" statement, my code was able to work perfectly. 
+
