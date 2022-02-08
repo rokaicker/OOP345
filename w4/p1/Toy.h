@@ -24,8 +24,8 @@ namespace sdds{
         Toy(){};
         Toy(const std::string& toy);
 
-        
-        void update(int numItems);
+
+        void update(int numItems) { m_numItems = numItems; };
         friend std::ostream& operator<<(std::ostream& os, const Toy& T);
     };
 
