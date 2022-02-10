@@ -67,18 +67,40 @@ namespace sdds{
     }
 
     ConfirmOrder& ConfirmOrder::operator-=(const Toy& toy){
-
+        bool check = false;
+        int index{};
+        for (int i = 0; i < m_numOfConfirms; i++){
+            if (m_orderArray[i] == &toy){
+                check = true;
+                index = i;
+            }
+        }
+        if (check == true){
+            const Toy** temp = new Toy*[m_numOfConfirms-1];
+            for (int i = 0; i < m_numOfConfirms; i++){
+                if (i < index){
+                    temp[i] = m_orderArray[i];
+                }
+                if(i > index){
+                    temp[i-1] = m_orderArray[i]; 
+                }
+            }
+            delete [] m_orderArray;
+            m_orderArray = temp;
+            --m_numOfConfirms;
+        }
+        return *this;
     }
 
     std::ostream& operator<<(std::ostream& os, const ConfirmOrder& CO){
     os << "--------------------------" << std::endl;
     os << "Confirmations to Send" << std::endl;
     os << "--------------------------" << std::endl;
-    if (){
+    if (CO.m_numOfConfirms == 0){
         os << "There are no confirmations to send!" << std::endl;
     } else {
-        for (int i = 0; i < ; i++){
-
+        for (int i = 0; i < CO.m_numOfConfirms; i++){
+            os << CO.m_orderArray[i];
         }
     }
     os << "--------------------------" << std::endl;
