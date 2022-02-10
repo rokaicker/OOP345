@@ -9,9 +9,8 @@
 #include "Child.h"
 
 namespace sdds{
-    Child::Child(std::string name, int age, const Toy* toys[], size_t count) : m_name{name}, m_age{age}
+    Child::Child(std::string name, int age, const Toy* toys[], size_t count) : m_name{name}, m_age{age}, m_numOfToys{count}
     {
-        m_numOfToys = count;
         m_childToyArray = new Toy*[m_numOfToys];
         for (int i = 0; i < m_numOfToys; i++){
             m_childToyArray[i] = toys[i];
