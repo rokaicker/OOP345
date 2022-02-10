@@ -56,7 +56,7 @@ namespace sdds{
         os.width(3);
         os << T.m_numItems << " items";
         os.width(8);
-        os << T.m_price << "/item subtotal:";
+        os << T.m_price << "/item  subtotal:";
         os.width(7);
         os << subTot << " tax:";
         os.width(6);
