@@ -10,6 +10,23 @@
 
 namespace sdds{
 
+    ConfirmOrder::ConfirmOrder(const ConfirmOrder& src){
+
+    }
+
+    ConfirmOrder::ConfirmOrder(ConfirmOrder&& src){
+
+    }
+
+    ConfirmOrder& ConfirmOrder::operator=(const ConfirmOrder& src){
+
+    }
+
+    ConfirmOrder& ConfirmOrder::operator=(ConfirmOrder&& src){
+
+    }
+
+
     ConfirmOrder& ConfirmOrder::operator+=(const Toy& toy){
 
     }
@@ -26,7 +43,7 @@ namespace sdds{
         os << "There are no confirmations to send!" << std::endl;
     } else {
         for (int i = 0; i < ; i++){
-            
+
         }
     }
     os << "--------------------------" << std::endl;
