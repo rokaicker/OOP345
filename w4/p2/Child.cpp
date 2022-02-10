@@ -66,7 +66,7 @@ namespace sdds{
             os << "This child has no toys!" << std::endl;
         } else {
             for (size_t i = 0; i < C.m_numOfToys; i++){
-                os << C.m_childToyArray[i];
+                os << *(C.m_childToyArray[i]);
             }
         }
         os << "--------------------------" << std::endl;
