@@ -100,7 +100,7 @@ namespace sdds{
         os << "There are no confirmations to send!" << std::endl;
     } else {
         for (size_t i = 0; i < CO.m_numOfConfirms; i++){
-            os << CO.m_orderArray[i];
+            os << *(CO.m_orderArray[i]);
         }
     }
     os << "--------------------------" << std::endl;
