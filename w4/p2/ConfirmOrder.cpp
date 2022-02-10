@@ -47,6 +47,22 @@ namespace sdds{
 
 
     ConfirmOrder& ConfirmOrder::operator+=(const Toy& toy){
+        bool check = false;
+        for (int i = 0; i < m_numOfConfirms; i++){
+            if (m_orderArray[i] == &toy){
+                check = true;
+            }
+        }
+        if(check == false){
+            const Toy** temp = new Toy*[m_numOfConfirms + 1];
+            for (int i = 0; i < m_numOfConfirms; i++){
+                temp[i] = m_orderArray[i];
+            }
+            delete [] m_orderArray;
+            m_orderArray = temp;
+            m_orderArray[m_numOfConfirms++] = &toy;
+        }
+        return *this;
 
     }
 
