@@ -1,0 +1,70 @@
+/*
+* Name: Rohan Kaicker
+* Seneca Email: rkaicker@myseneca.ca
+* Seneca Student ID: 119070217
+* Date: February 13, 2022
+*
+* I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
+*/
+
+In this workshop, we learned about the different kinds of relationships that classes can have with one another. 
+
+The "Child" class has a "Composition" relationship with the "Toy" class. Essentially these means that a Child object will have a "has-a" relationship with Toy objects. 
+Our Child object has an attribute "const Toy** m_childToyArray" (an array of pointers to Toy objects). 
+We've implemented the Composition relationship by ensuring that the Child object has complete ownership over the Toy objects. 
+This means that it is up to the Child object to create/ destroy Toy objects. Furthermore, updates to Toy objects will not affect the Child object. 
+This is done by dynamic allocation of both the array and the array members, as shown in the Construtor code below:
+
+    Child::Child(std::string name, int age, const Toy* toys[], size_t count) : m_name{name}, m_age{age}, m_numOfToys{count}
+    {
+        m_childToyArray = new const Toy*[m_numOfToys];		// Dynamic allocation of array of pointers to Toy objects
+        for (size_t i = 0; i < m_numOfToys; i++){
+            m_childToyArray[i] = new const Toy(*toys[i]);	// Dynamic allocation of array members of Toy objects
+        }
+    }
+
+Similar logic applies to both the copy constructor/ assignment operator, and move constructor/ assignment operator. 
+One thing that we have to note here is that we can not just deallocate the array, instead we will have to loop through the entire array and deallocate each array member before deallocating the array.
+In fact, I was initially running into memory issues because I was not deallocating the invididual Toy objects from the array, and was simply deallocating the array. 
+Once I started to deallocate each object, my problems went away. 
+
+This is shown in the Destructor code below:
+
+    Child::~Child(){
+        for (size_t i = 0; i < m_numOfToys; i++){
+            delete m_childToyArray[i];
+        }
+        delete [] m_childToyArray;
+    }
+
+In contrast to the above, the ConfirmOrder class has an "Aggregation" relationship with the Toy class.
+ConfirmOrder objects aren't responsible for the creation/ destruction of Toy objects. 
+We can add/ remove Toy objects to the ConfirmOrder object (done thorugh the "+=" and "-=") operator overloads, without allocating/ deallocating Toy objects.
+Unlike Child objects, in the ConfirmOrder object we just have to worry about allocating/ deallocating the array, and not worry about its members. 
+This also carried over to the copy and move operations done on ConfirmOrder objeccts. This also means that updates to Toy objects will affect the ConfirmOrder object. 
+
+This is shown in the code below:
+
+onfirmOrder& ConfirmOrder::operator=(const ConfirmOrder& src){
+        if(this != &src){
+            delete [] m_orderArray;
+            m_numOfConfirms = src.m_numOfConfirms;
+            m_orderArray = new const Toy*[m_numOfConfirms];
+            for (size_t i = 0; i < m_numOfConfirms; i++){
+                m_orderArray[i] = src.m_orderArray[i];
+            }
+        }
+        return *this;
+    }
+
+    ConfirmOrder& ConfirmOrder::operator=(ConfirmOrder&& src){
+        if(this != &src){
+            delete [] m_orderArray;
+            m_orderArray = src.m_orderArray;
+            m_numOfConfirms = src.m_numOfConfirms;
+            src.m_orderArray = nullptr;
+            src.m_numOfConfirms = 0;
+        }
+        return *this;
+    }
+
