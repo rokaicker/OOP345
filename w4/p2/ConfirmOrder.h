@@ -15,6 +15,7 @@ namespace sdds{
 
     class ConfirmOrder{
         const sdds::Toy** m_orderArray{nullptr};
+        int m_numOfConfirms{};
 
     public:
         ConfirmOrder(){};

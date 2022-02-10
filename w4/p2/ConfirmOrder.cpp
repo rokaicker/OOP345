@@ -11,23 +11,28 @@
 namespace sdds{
 
     ConfirmOrder::ConfirmOrder(const ConfirmOrder& src){
-
+        *this = src;
     }
 
     ConfirmOrder::ConfirmOrder(ConfirmOrder&& src){
-
+        *this = std::move(src);
     }
 
     ConfirmOrder& ConfirmOrder::operator=(const ConfirmOrder& src){
-
+        if(this != &src){
+            delete [] m_orderArray;
+            
+        }
     }
 
     ConfirmOrder& ConfirmOrder::operator=(ConfirmOrder&& src){
-
+        if(this != &src){
+            delete [] m_orderArray;
+        }
     }
 
     ConfirmOrder::~ConfirmOrder(){
-        
+
     }
 
 
