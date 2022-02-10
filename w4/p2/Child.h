@@ -14,12 +14,20 @@
 namespace sdds{
     class Child{
         std::string m_name{};
-        unsigned age{};
-        const sdds::Toy** m_childArray{};
-        static unsigned CALL_CNT;
+        int m_age{};
+        const sdds::Toy** m_childToyArray{nullptr};
+        unsigned int m_numOfToys{};
+
     public:
         Child(std::string name, int age, const Toy* toys[], size_t count);
-        size_t size() const;
+        Child(const Child& src);
+        Child(Child&& src);
+        Child& operator=(const Child& src);
+        Child& operator=(Child&& src);
+
+        ~Child();
+        
+        size_t size() const {return m_numOfToys;};
         friend std::ostream& operator<<(std::ostream& os, const Child& C);
 
     };
