@@ -26,6 +26,10 @@ namespace sdds{
 
     }
 
+    ConfirmOrder::~ConfirmOrder(){
+        
+    }
+
 
     ConfirmOrder& ConfirmOrder::operator+=(const Toy& toy){
 

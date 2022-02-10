@@ -22,7 +22,7 @@ namespace sdds{
         ConfirmOrder(ConfirmOrder&& src);
         ConfirmOrder& operator=(const ConfirmOrder& src);
         ConfirmOrder& operator=(ConfirmOrder&& src);
-
+        ~ConfirmOrder();
         ConfirmOrder& operator+=(const Toy& toy);
         ConfirmOrder& operator-=(const Toy& toy);
         friend std::ostream& operator<<(std::ostream& os, const ConfirmOrder& CO);
