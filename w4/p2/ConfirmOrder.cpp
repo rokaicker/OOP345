@@ -21,18 +21,28 @@ namespace sdds{
     ConfirmOrder& ConfirmOrder::operator=(const ConfirmOrder& src){
         if(this != &src){
             delete [] m_orderArray;
-            
+            m_numOfConfirms = src.m_numOfConfirms;
+            m_orderArray = new Toy*[m_numOfConfirms];
+            for (int i = 0; i < m_numOfConfirms; i++){
+                m_orderArray[i] = src.m_orderArray[i];
+            }
         }
+        return *this;
     }
 
     ConfirmOrder& ConfirmOrder::operator=(ConfirmOrder&& src){
         if(this != &src){
             delete [] m_orderArray;
+            m_orderArray = src.m_orderArray;
+            m_numOfConfirms = src.m_numOfConfirms;
+            src.m_orderArray = nullptr;
+            src.m_numOfConfirms = 0;
         }
+        return *this;
     }
 
     ConfirmOrder::~ConfirmOrder(){
-
+        delete [] m_orderArray;
     }
 
 
