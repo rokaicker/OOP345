@@ -31,6 +31,7 @@ namespace sdds{
             m_name = src.m_name;
             m_age = src.m_age;
             m_numOfToys = src.m_numOfToys;
+            m_childToyArray = new const Toy*[m_numOfToys];
             for (size_t i = 0; i < m_numOfToys; i++){
                 m_childToyArray[i] = src.m_childToyArray[i];
             }
