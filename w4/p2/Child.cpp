@@ -11,8 +11,8 @@
 namespace sdds{
     Child::Child(std::string name, int age, const Toy* toys[], size_t count) : m_name{name}, m_age{age}, m_numOfToys{count}
     {
-        m_childToyArray = new Toy*[m_numOfToys];
-        for (int i = 0; i < m_numOfToys; i++){
+        m_childToyArray = new const Toy*[m_numOfToys];
+        for (size_t i = 0; i < m_numOfToys; i++){
             m_childToyArray[i] = toys[i];
         }
     }
@@ -31,7 +31,7 @@ namespace sdds{
             m_name = src.m_name;
             m_age = src.m_age;
             m_numOfToys = src.m_numOfToys;
-            for (int i = 0; i < m_numOfToys; i++){
+            for (size_t i = 0; i < m_numOfToys; i++){
                 m_childToyArray[i] = src.m_childToyArray[i];
             }
         }
@@ -65,7 +65,7 @@ namespace sdds{
         if (C.m_numOfToys == 0){
             os << "This child has no toys!" << std::endl;
         } else {
-            for (int i = 0; i < C.m_numOfToys; i++){
+            for (size_t i = 0; i < C.m_numOfToys; i++){
                 os << C.m_childToyArray[i];
             }
         }

@@ -22,8 +22,8 @@ namespace sdds{
         if(this != &src){
             delete [] m_orderArray;
             m_numOfConfirms = src.m_numOfConfirms;
-            m_orderArray = new Toy*[m_numOfConfirms];
-            for (int i = 0; i < m_numOfConfirms; i++){
+            m_orderArray = new const Toy*[m_numOfConfirms];
+            for (size_t i = 0; i < m_numOfConfirms; i++){
                 m_orderArray[i] = src.m_orderArray[i];
             }
         }
@@ -48,14 +48,14 @@ namespace sdds{
 
     ConfirmOrder& ConfirmOrder::operator+=(const Toy& toy){
         bool check = false;
-        for (int i = 0; i < m_numOfConfirms; i++){
+        for (size_t i = 0; i < m_numOfConfirms; i++){
             if (m_orderArray[i] == &toy){
                 check = true;
             }
         }
         if(check == false){
-            const Toy** temp = new Toy*[m_numOfConfirms + 1];
-            for (int i = 0; i < m_numOfConfirms; i++){
+            const Toy** temp = new const Toy*[m_numOfConfirms + 1];
+            for (size_t i = 0; i < m_numOfConfirms; i++){
                 temp[i] = m_orderArray[i];
             }
             delete [] m_orderArray;
@@ -68,16 +68,16 @@ namespace sdds{
 
     ConfirmOrder& ConfirmOrder::operator-=(const Toy& toy){
         bool check = false;
-        int index{};
-        for (int i = 0; i < m_numOfConfirms; i++){
+        size_t index{};
+        for (size_t i = 0; i < m_numOfConfirms; i++){
             if (m_orderArray[i] == &toy){
                 check = true;
                 index = i;
             }
         }
         if (check == true){
-            const Toy** temp = new Toy*[m_numOfConfirms-1];
-            for (int i = 0; i < m_numOfConfirms; i++){
+            const Toy** temp = new const Toy*[m_numOfConfirms-1];
+            for (size_t i = 0; i < m_numOfConfirms; i++){
                 if (i < index){
                     temp[i] = m_orderArray[i];
                 }
@@ -99,7 +99,7 @@ namespace sdds{
     if (CO.m_numOfConfirms == 0){
         os << "There are no confirmations to send!" << std::endl;
     } else {
-        for (int i = 0; i < CO.m_numOfConfirms; i++){
+        for (size_t i = 0; i < CO.m_numOfConfirms; i++){
             os << CO.m_orderArray[i];
         }
     }

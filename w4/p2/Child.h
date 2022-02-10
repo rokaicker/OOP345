@@ -16,7 +16,7 @@ namespace sdds{
         std::string m_name{};
         int m_age{};
         const sdds::Toy** m_childToyArray{nullptr};
-        unsigned int m_numOfToys{};
+        size_t m_numOfToys{};
 
     public:
         Child(std::string name, int age, const Toy* toys[], size_t count);
