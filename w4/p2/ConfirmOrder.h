@@ -14,7 +14,8 @@
 namespace sdds{
 
     class ConfirmOrder{
-        const sdds::Toy** m_orderArray{};
+        const sdds::Toy** m_orderArray{nullptr};
+        
     public:
         ConfirmOrder& operator+=(const Toy& toy);
         ConfirmOrder& operator-=(const Toy& toy);
