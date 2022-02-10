@@ -13,7 +13,7 @@ namespace sdds{
     {
         m_childToyArray = new const Toy*[m_numOfToys];
         for (size_t i = 0; i < m_numOfToys; i++){
-            m_childToyArray[i] = toys[i];
+            m_childToyArray[i] = new const Toy(*toys[i]);
         }
     }
 
@@ -27,13 +27,16 @@ namespace sdds{
 
     Child& Child::operator=(const Child& src){
         if(this != &src){
+            for (size_t i = 0; i < m_numOfToys; i++){
+                delete m_childToyArray[i];
+            }
             delete [] m_childToyArray;
             m_name = src.m_name;
             m_age = src.m_age;
             m_numOfToys = src.m_numOfToys;
             m_childToyArray = new const Toy*[m_numOfToys];
             for (size_t i = 0; i < m_numOfToys; i++){
-                m_childToyArray[i] = src.m_childToyArray[i];
+                m_childToyArray[i] = new const Toy(*src.m_childToyArray[i]);
             }
         }
         return *this;
@@ -41,6 +44,9 @@ namespace sdds{
 
     Child& Child::operator=(Child&& src){
         if (this != & src){
+            for (size_t i = 0; i < m_numOfToys; i++){
+                delete m_childToyArray[i];
+            }
             delete [] m_childToyArray;
             m_childToyArray = src.m_childToyArray;
             m_name = src.m_name;
@@ -55,6 +61,9 @@ namespace sdds{
     }
 
     Child::~Child(){
+        for (size_t i = 0; i < m_numOfToys; i++){
+            delete m_childToyArray[i];
+        }
         delete [] m_childToyArray;
     }
     
