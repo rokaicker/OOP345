@@ -9,9 +9,25 @@
 
 #ifndef JOB_H
 #define JOB_H
+#include <iostream>
 
 namespace sdds{
-    
+    class Job {
+        std::string m_jobTitle{};
+        size_t m_workUnits{};
+        size_t m_remWorkUnits{};
+        bool m_active{};
+    public:
+        Job() : m_jobTitle{""}, m_workUnits{0}, m_remWorkUnits{0}, m_active{false}{}
+        Job(std::string title);
+        
+        bool is_active()const{return m_active;};
+        bool is_complete()const{return m_remWorkUnits == 0;};
+        std::string name()const{return m_jobTitle;};
+        void display(std::ostream& os)const;
+        bool operator()(size_t workUnits)const;
+    };
+    std::ostream& operator<<(std::ostream& os, const Job& J);
 }
 
 #endif

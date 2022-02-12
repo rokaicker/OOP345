@@ -7,3 +7,31 @@
 * I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
 */
 #include "Job.h"
+namespace sdds{
+    Job::Job(std::string title) : m_jobTitle{title} {
+        m_workUnits = (m_jobTitle.length()%10) + 1;
+    }
+
+    std::ostream& operator<<(std::ostream& os, const Job& J){
+        J.display(os);
+        return os;
+    }
+
+    void Job::display(std::ostream& os)const{
+        os << "`" << m_jobTitle << "` ";
+        os.fill('0');
+        os <<  "[";
+        os.width(2);
+        os << m_remWorkUnits;
+        os << "/";
+        os.width(2);
+        os << m_workUnits;
+        os << " remaining]" << std::endl;
+    }
+
+    bool Job::operator()(size_t workUnits)const{
+        
+    }
+
+
+}
