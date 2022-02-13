@@ -7,6 +7,7 @@
 * I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
 */
 #include "Job.h"
+#include <exception>
 namespace sdds{
     Job::Job(std::string title) : m_jobTitle{title} {
         m_workUnits = (m_jobTitle.length()%10) + 1;
@@ -29,8 +30,13 @@ namespace sdds{
         os << " remaining]" << std::endl;
     }
 
-    bool Job::operator()(size_t workUnits)const{
-        
+    void Job::operator()(size_t workUnits){
+        if(m_remWorkUnits < workUnits){
+            m_remWorkUnits = 0;
+            throw std::underflow_error("");
+        }
+        m_remWorkUnits -= workUnits;
+        if (is_complete()) m_active = false;
     }
 
 
