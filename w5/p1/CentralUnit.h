@@ -21,7 +21,9 @@ namespace sdds{
         std::ostream& log{std::cout};
         CentralUnit(std::string type, char* fileName);
         CentralUnit(const CentralUnit& src)=delete;
+        CentralUnit(CentralUnit&& src)=delete;
         CentralUnit& operator=(const CentralUnit& src)=delete;
+        CentralUnit& operator=(CentralUnit&& src)=delete;
 
         CentralUnit& operator+=(std::string jobTitle);
         void run();
