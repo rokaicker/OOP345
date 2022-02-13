@@ -25,7 +25,7 @@ namespace sdds{
         bool is_complete()const{return m_remWorkUnits == 0;};
         std::string name()const{return m_jobTitle;};
         void display(std::ostream& os)const;
-        bool operator()(size_t workUnits);
+        void operator()(size_t workUnits);
     };
     std::ostream& operator<<(std::ostream& os, const Job& J);
 }
