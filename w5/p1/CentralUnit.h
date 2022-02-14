@@ -10,6 +10,8 @@
 #define CENTRALUNIT_H
 #include "Job.h"
 #include <fstream>
+#include <string>
+
 namespace sdds{
     template <typename T>
     class CentralUnit{
@@ -37,13 +39,29 @@ namespace sdds{
         std::string inputLine;
         std::string innerInput;
         int endPos{};
-
+        size_t count{0};
         std::string unitType;
         std::string unitName;
         std::string workCapacityStr;
         size_t workCapacity;
 
-        ifstream fs(fileName);
+        try{
+            ifstream fs(fileName);
+            if (!fileName.is_open()){
+                throw std::invalid_argument("File cannot be opened.")
+            }
+        }
+        do {
+            std::getline(fs,inputLine);
+            ++count;
+        }while(fs);
+
+        m_items = new T*[count];
+        count = 0;
+
+        fs.clear();
+        fs.seekg(std::ios::beg);
+
         while(getline(fs, inputLine)){
             for (int i = 0; i < 3; i++){
                 switch(i){
@@ -65,6 +83,12 @@ namespace sdds{
                 }
                 inputLine.erase(0,endPos+1);
             }
+            try{
+                workCapacity = stoi(workCapacityStr);   
+            } catch(std::invalid_argument){
+                workCapacity = 1;
+            }
+            m_items[count++] = new T(&this, unitType, unityName, workCapacity)
         }
     }
 }
