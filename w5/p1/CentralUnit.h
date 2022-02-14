@@ -9,6 +9,7 @@
 #ifndef CENTRALUNIT_H
 #define CENTRALUNIT_H
 #include "Job.h"
+#include <fstream>
 namespace sdds{
     template <typename T>
     class CentralUnit{
@@ -30,6 +31,47 @@ namespace sdds{
         bool has_jobs()const;
         int get_available_units()const;
     };
+
+    template<typename T>
+    CentralUnit<T>::CentralUnit(std::string type, char* fileName) : m_type{type} {
+        std::string inputLine;
+        std::string innerInput;
+        int endPos{};
+
+        std::string unitType;
+        std::string unitName;
+        std::string workCapacityStr;
+        size_t workCapacity;
+
+        ifstream fs(fileName);
+        while(getline(fs, inputLine)){
+            for (int i = 0; i < 3; i++){
+                switch(i){
+                    case 0:
+                        endPos = inputLine.find('|');
+                        innerInput = inputLine.substr(0,endPos)
+                        unitType = innerInput.erase(std::remove(innerInput.begin(), innerInput.end(), ' '), innerInput.end());
+                        break;
+                    case 1:
+                        endPos = inputLine.find('|');
+                        innerInput = inputLine.substr(0,endPos)
+                        unitName = innerInput.erase(std::remove(innerInput.begin(), innerInput.end(), ' '), innerInput.end());
+                        break;
+                    case 2:
+                        endPos = inputLine.find('\n');
+                        innerInput = inputLine.substr(0,endPos)
+                        workCapacityStr = innerInput.erase(std::remove(innerInput.begin(), innerInput.end(), ' '), innerInput.end());
+                        break;
+                }
+                inputLine.erase(0,endPos+1);
+            }
+        }
+    }
 }
+
+
+
+
+
 
 #endif
