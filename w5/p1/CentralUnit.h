@@ -28,10 +28,10 @@ namespace sdds{
         CentralUnit& operator=(const CentralUnit& src)=delete;
         CentralUnit& operator=(CentralUnit&& src)=delete;
 
-        CentralUnit& operator+=(std::string jobTitle);
+        CentralUnit& operator+=(const std::string jobTitle);
         void run();
         bool has_jobs()const;
-        int get_available_units()const;
+        size_t get_available_units()const;
     };
 
     template<typename T>
@@ -88,8 +88,33 @@ namespace sdds{
             } catch(std::invalid_argument){
                 workCapacity = 1;
             }
-            m_items[count++] = new T(&this, unitType, unityName, workCapacity)
+            m_items[count++] = new T(&this, unitType, unitName, workCapacity)
         }
+    }
+
+    template<typename T>
+    CentralUnit<T>& CentralUnit<T>::operator+=(const std::string jobTitle){
+        if (m_count == 4){
+            throw string("Job Queue Full")
+        }         if (m_count == 4){
+            throw string("Job Queue Full")
+        } 
+        m_jobs[m_count++] = new Job(jobTitle);
+    }
+
+    template<typename T>
+    void CentralUnit<T>::run(){
+        
+    }
+
+    template<typename T>
+    bool CentralUnit<T>::has_jobs()const{
+
+    }
+
+    template<typename T>
+    size_t CentralUnit<T>::get_available_units()const{
+
     }
 }
 
