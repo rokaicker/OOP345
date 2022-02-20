@@ -267,6 +267,18 @@ namespace sdds{
         throw std::out_of_range("Job is not being handled by a unit.");
         return nullptr;
     }
+
+    template<typename T>
+    void CentralUnit<T>::display()const{
+        log << "Central " << m_type << " Unit list";
+        for (size_t i = 0; i < m_size; i++){
+            log << "[";
+            log.width(4);
+            log.fill('0');
+            log << i + 1; << "]";
+            cout << *m_items[i] << std::endl;
+        }
+    }
 }
 
 #endif
