@@ -35,9 +35,8 @@ namespace sdds{
         bool has_jobs()const;
         size_t get_available_units()const;
 
-        void complete_job(CentralUnit& CU,T& T);
+        void complete_job(CentralUnit& CU,T* T);
         void display();
-
 
     };
 
@@ -110,6 +109,8 @@ namespace sdds{
                 workCapacity = 1;
             }
             m_items[m_size++] = new T(this, unitType, unitName, workCapacity);
+            m_items[m_size-1]->on_complete(complete_job());
+            auto lambda = []();
         }
     }
 
@@ -209,6 +210,16 @@ namespace sdds{
         }
         return count;
     }
+    
+    template<typename T>
+    void CentralUnit<T>::complete_job(CentralUnit<T>& CU,T* T){
+        CU.log << "[COMPLETE] " << T->m_current << " using " << T;
+        size_t availUnits = CU.get_available_units();
+        CU.log << availUnits << " units available.";
+        Job* temp = T->free();
+        delete temp;
+    }
+
 }
 
 #endif
