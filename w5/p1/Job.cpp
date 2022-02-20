@@ -9,7 +9,7 @@
 #include "Job.h"
 #include <exception>
 namespace sdds{
-    Job::Job(std::string title) : m_jobTitle{title} {
+    Job::Job(std::string title) : m_jobTitle{title}, m_active{true} {
         m_workUnits = (m_jobTitle.length()%10) + 1;
     }
 
@@ -33,11 +33,10 @@ namespace sdds{
     void Job::operator()(size_t workUnits){
         if(m_remWorkUnits < workUnits){
             m_remWorkUnits = 0;
-            throw std::underflow_error("");
+            m_active = false;
+            throw std::underflow_error("more work assigned than remaining");
         }
         m_remWorkUnits -= workUnits;
         if (is_complete()) m_active = false;
     }
-
-
 }
