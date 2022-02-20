@@ -35,8 +35,12 @@ namespace sdds{
         bool has_jobs()const;
         size_t get_available_units()const;
 
+        // New member functions/ overloads for p2
         void complete_job(CentralUnit& CU,T* T);
-        void display();
+        CentralUnit& operator+=(T* unit);
+        T* operator[](const std::string jobTitle)const;
+        void display()const;
+
 
     };
 
@@ -226,6 +230,42 @@ namespace sdds{
         size_t availUnits = CU.get_available_units();
         CU.log << availUnits << " units available.";
         delete temp;
+    }
+
+    template<typename T>
+    CentralUnit<T>& CentralUnit<T>::operator+=(T* unit){
+        //  m_items = new T*[count];
+        // m_items[i] = new T(this, unitType, unitName, workCapacity)
+        // m_size++;
+        m_newItems =new T*[++m_size];
+        for (size_t i = 0; i < m_size - 1; i++){
+            m_newItems[i] = m_items[i];
+        }
+        delete [] m_items;
+        m_items = m_newItems;
+        m_newItems = nullptr;
+        m_items[m_size] = unit;
+        m_item[m_size]->on_complete(&CentralUnit<T>::complete_job());
+        std::function<void(T*)> lambda = [](T* T){
+            Job* temp = T->free();
+            log << "Failed to complete job " << temp->name() << std::endl;
+            log << get_available_units() << " units available." << std::endl;
+            delete temp;
+        }
+        m_items[m_size]->on_error(lambda);
+    }
+
+    template<typename T>
+    T* CentralUnit<T>::operator[](const std::string jobTitle)const{
+        for (size_t i = 0; i < m_size; i++){
+            if (m_items[i]->get_current_job() != nullptr){
+                if (m_items[i]->get_current_job()->name() == jobTitle){
+                    return m_items[i]
+                }
+            }
+        }
+        throw std::out_of_range("Job is not being handled by a unit.");
+        return nullptr;
     }
 }
 
