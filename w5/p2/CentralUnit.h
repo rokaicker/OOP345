@@ -13,6 +13,7 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <functional>
 
 namespace sdds{
     template <typename T>
@@ -36,7 +37,7 @@ namespace sdds{
         size_t get_available_units()const;
 
         // New member functions/ overloads for p2
-        void complete_job(CentralUnit& CU,T* T);
+        void complete_job(CentralUnit& CU,T* unit);
         CentralUnit& operator+=(T* unit);
         T* operator[](const std::string jobTitle)const;
         void display()const;
@@ -224,9 +225,9 @@ namespace sdds{
     }
     
     template<typename T>
-    void CentralUnit<T>::complete_job(CentralUnit<T>& CU,T* T){
-        Job* temp = T->free();
-        CU.log << "[COMPLETE] " << *temp << " using " << *T;
+    void CentralUnit<T>::complete_job(CentralUnit<T>& CU,T* unit){
+        Job* temp = unit->free();
+        CU.log << "[COMPLETE] " << *temp << " using " << *unit;
         size_t availUnits = CU.get_available_units();
         CU.log << availUnits << " units available.";
         delete temp;
@@ -237,7 +238,7 @@ namespace sdds{
         //  m_items = new T*[count];
         // m_items[i] = new T(this, unitType, unitName, workCapacity)
         // m_size++;
-        m_newItems =new T*[++m_size];
+        T** m_newItems = new T*[++m_size];
         for (size_t i = 0; i < m_size - 1; i++){
             m_newItems[i] = m_items[i];
         }
@@ -245,7 +246,7 @@ namespace sdds{
         m_items = m_newItems;
         m_newItems = nullptr;
         m_items[m_size] = unit;
-        m_item[m_size]->on_complete(&CentralUnit<T>::complete_job());
+        m_items[m_size]->on_complete(&CentralUnit<T>::complete_job());
         std::function<void(T*)> lambda = [](T* T){
             Job* temp = T->free();
             log << "Failed to complete job " << temp->name() << std::endl;
@@ -260,7 +261,7 @@ namespace sdds{
         for (size_t i = 0; i < m_size; i++){
             if (m_items[i]->get_current_job() != nullptr){
                 if (m_items[i]->get_current_job()->name() == jobTitle){
-                    return m_items[i]
+                    return m_items[i];
                 }
             }
         }
@@ -275,8 +276,8 @@ namespace sdds{
             log << "[";
             log.width(4);
             log.fill('0');
-            log << i + 1; << "]";
-            cout << *m_items[i] << std::endl;
+            log << i + 1 << "]";
+            std::cout << *m_items[i] << std::endl;
         }
     }
 }
