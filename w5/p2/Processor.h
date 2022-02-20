@@ -10,6 +10,8 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
 #include "CentralUnit.h"
+#include "Job.h"
+#include <functional>
 
 namespace sdds{
     class Processor{
@@ -18,6 +20,10 @@ namespace sdds{
         std::string m_code{};                       // Text description of microprocessor aka unit name                     
         size_t m_power{};                           // Number of work units microprocessor can proces for job in single run 
         Job* m_current{nullptr};                    // Address of job currently assigned to microprocessor to be processed
+
+        void (*endFunc)(CentralUnit<Processor>* host,Processor* processor); // Stores address of funtion that will run once job finishes processing
+        std::function<void(Processor* processor)> errFunc;                  // Function object that targets function to be run when an error occurs
+
     public:
         Processor(CentralUnit<Processor>* host, std::string brand, std::string code, size_t power) : m_host{host}, m_brand{brand}, m_code{code}, m_power{power} {};
 
@@ -25,6 +31,17 @@ namespace sdds{
         explicit operator bool() const {return m_current != nullptr;};  // True if microprocessor has a job assigned to it
         Processor& operator+=(Job*& newJob);                            // Assigns a job to processor
         Job* get_current_job() const {return m_current;};               // Returns current job assigned to processor
+
+        void on_complete(void (*endFunc)(CentralUnit<Processor>* host,Processor* processor));
+        void on_error(std::function<void(Processor* processor)> errFunc);
+
+        void Processor::operator()();
+        Job* free();
+        void display(std::ostream& os = std::cout)const;
+    };
+    std::ostream& operator<<(std::ostream& os, const Processor& P){
+        P.display(os);
+        return os;
     };
 }
 
