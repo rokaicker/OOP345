@@ -11,6 +11,7 @@
 namespace sdds{
     Job::Job(std::string title) : m_jobTitle{title}, m_active{true} {
         m_workUnits = (m_jobTitle.length()%10) + 1;
+        m_remWorkUnits = m_workUnits;
     }
 
     std::ostream& operator<<(std::ostream& os, const Job& J){
@@ -36,7 +37,10 @@ namespace sdds{
             m_active = false;
             throw std::underflow_error("more work assigned than remaining");
         }
-        m_remWorkUnits -= workUnits;
-        if (is_complete()) m_active = false;
+        else {
+            m_remWorkUnits -= workUnits;
+            if (is_complete()) m_active = false;
+        }
+
     }
 }
