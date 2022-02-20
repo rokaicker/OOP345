@@ -109,8 +109,14 @@ namespace sdds{
                 workCapacity = 1;
             }
             m_items[m_size++] = new T(this, unitType, unitName, workCapacity);
-            m_items[m_size-1]->on_complete(complete_job());
-            auto lambda = []();
+            m_items[m_size-1]->on_complete(&CentralUnit<T>::complete_job());
+            std::function<void(T*)> lambda = [](T* T){
+                Job* temp = T->free();
+                log << "Failed to complete job " << temp->name() << std::endl;
+                log << get_available_units() << " units available." << std::endl;
+                delete temp;
+            }
+            m_items[m_size-1]->on_error(lambda);
         }
     }
 
@@ -121,7 +127,7 @@ namespace sdds{
     }
 
     // Throwing exception when copy assignment operator called 
-    /*template<typename T>
+    /*template<typename T>this
     CentralUnit<T>& CentralUnit<T>::operator=(const CentralUnit& src){
         throw std::exception();
     }*/
@@ -176,12 +182,14 @@ namespace sdds{
     void CentralUnit<T>::run(){
         for (size_t i = 0; i < m_size; i++){
             if (m_items[i]->get_current_job() != nullptr) {
-                m_items[i]->run();
+                //m_items[i]->run(); commented out to run as functor
+                (m_items[i])();
             }
             else {
                 if (m_count > 0) {
                     *m_items[i] += m_jobs[--m_count];
-                    m_items[i]->run();
+                    //m_items[i]->run(); commented out to run as functor
+                    (m_items[i])();
                 }
             }
         } 
@@ -213,13 +221,12 @@ namespace sdds{
     
     template<typename T>
     void CentralUnit<T>::complete_job(CentralUnit<T>& CU,T* T){
-        CU.log << "[COMPLETE] " << T->m_current << " using " << T;
+        Job* temp = T->free();
+        CU.log << "[COMPLETE] " << *temp << " using " << *T;
         size_t availUnits = CU.get_available_units();
         CU.log << availUnits << " units available.";
-        Job* temp = T->free();
         delete temp;
     }
-
 }
 
 #endif
