@@ -114,13 +114,13 @@ namespace sdds{
                 workCapacity = 1;
             }
             m_items[m_size++] = new T(this, unitType, unitName, workCapacity);
-            m_items[m_size-1]->on_complete(&CentralUnit<T>::complete_job());
+            m_items[m_size-1]->on_complete(&CentralUnit<T>::complete_job);
             std::function<void(T*)> lambda = [this](T* unit){
                 Job* temp = unit->free();
                 log << "Failed to complete job " << temp->name() << std::endl;
                 log << get_available_units() << " units available." << std::endl;
                 delete temp;
-            }
+            };
             m_items[m_size-1]->on_error(lambda);
         }
     }
@@ -188,13 +188,13 @@ namespace sdds{
         for (size_t i = 0; i < m_size; i++){
             if (m_items[i]->get_current_job() != nullptr) {
                 //m_items[i]->run(); commented out to run as functor
-                (m_items[i])();
+                (*m_items[i])();
             }
             else {
                 if (m_count > 0) {
                     *m_items[i] += m_jobs[--m_count];
                     //m_items[i]->run(); commented out to run as functor
-                    (m_items[i])();
+                    (*m_items[i])();
                 }
             }
         } 
@@ -246,14 +246,15 @@ namespace sdds{
         m_items = m_newItems;
         m_newItems = nullptr;
         m_items[m_size] = unit;
-        m_items[m_size]->on_complete(&CentralUnit<T>::complete_job());
-        std::function<void(T*)> lambda = [this](T* T){
-            Job* temp = T->free();
+        m_items[m_size]->on_complete(&CentralUnit<T>::complete_job);
+        std::function<void(T*)> lambda = [this](T* unit){
+            Job* temp = unit->free();
             log << "Failed to complete job " << temp->name() << std::endl;
             log << get_available_units() << " units available." << std::endl;
             delete temp;
-        }
+        };
         m_items[m_size]->on_error(lambda);
+        return *this;
     }
 
     template<typename T>
