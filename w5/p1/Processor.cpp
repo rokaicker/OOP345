@@ -7,3 +7,32 @@
 * I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
 */
 #include "Processor.h"
+#include <string>
+
+namespace sdds{
+    void Processor::run(){
+        if (m_host != nullptr && m_current != nullptr){
+            if (m_current->is_complete()){
+                delete m_current;
+                m_current = nullptr;
+            } else {
+                try{
+                    (*m_current)(m_power);
+                } catch (std::underflow_error()) {
+                    std::cout << "Processed over quote for " << *m_current << std::endl;
+                    delete m_current;
+                    m_current = nullptr;
+                }
+            }
+        } 
+    }
+
+    Processor& Processor::operator+=(Job*& newJob){
+        if(m_current != nullptr){
+            throw std::exception();
+        } else {
+            m_current = new Job(newJob->name());
+        }
+        return *this;
+    }
+}
