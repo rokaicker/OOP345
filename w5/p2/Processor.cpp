@@ -57,11 +57,17 @@ namespace sdds{
             }
         }
     }
-    
+
     Job* Processor::free(){
         Job* temp = m_current;
         m_current = nullptr;
         return temp;
     }
 
+    void Processor::display(std::ostream& os) const {
+        os << "(" << m_power << ") " << m_brand << " " << m_code;
+        if(m_current != nullptr){
+            os <<" processing " << m_current;
+        }
+    }
 }
