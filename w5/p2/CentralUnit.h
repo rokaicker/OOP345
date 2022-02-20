@@ -34,6 +34,11 @@ namespace sdds{
         void run();
         bool has_jobs()const;
         size_t get_available_units()const;
+
+        void complete_job(CentralUnit& CU,T& T);
+        void display();
+
+
     };
 
     template<typename T>
