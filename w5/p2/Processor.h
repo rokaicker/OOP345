@@ -24,7 +24,7 @@ namespace sdds{
         void (*m_endFunc)(CentralUnit<Processor>& host,Processor* processor){nullptr}; // Stores address of funtion that will run once job finishes processing
         // void = return type of function, m_endFunc = name of pointer to function
 
-        std::function<void(Processor* processor)> errFunc;                  // Function object that targets function to be run when an error occurs
+        std::function<void(Processor* processor)> m_errFunc;                  // Function object that targets function to be run when an error occurs
 
     public:
         Processor(CentralUnit<Processor>* host, std::string brand, std::string code, size_t power) : m_host{host}, m_brand{brand}, m_code{code}, m_power{power} {};

@@ -41,5 +41,27 @@ namespace sdds{
         m_endFunc = endFunc;
     }
 
+    void Processor::on_error(std::function<void(Processor* processor)> errFunc){
+        m_errFunc = errFunc;
+    }
+
+    void Processor::operator()(){
+        if (!(m_current->is_complete())){
+            try{
+                (*m_current)(m_power);
+                if(m_current->is_complete()){
+                    m_endFunc(*m_host, this);
+                }
+            } catch (...) {
+                m_errFunc(this);
+            }
+        }
+    }
     
+    Job* Processor::free(){
+        Job* temp = m_current;
+        m_current = nullptr;
+        return temp;
+    }
+
 }
