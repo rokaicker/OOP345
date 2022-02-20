@@ -31,7 +31,8 @@ namespace sdds{
         if(m_current != nullptr){
             throw std::exception();
         } else {
-            m_current = new Job(newJob->name());
+            //m_current = new Job(newJob->name());
+            m_current = newJob;
         }
         return *this;
     }
