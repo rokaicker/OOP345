@@ -38,12 +38,12 @@ namespace sdds{
 
     template<typename T>
     CentralUnit<T>::CentralUnit(std::string type, std::string fileName) : m_type{type} {               //char* fileName) : m_type{type} {
-        std::string inputLine;
-        std::string innerInput;
+        std::string inputLine{};
+        std::string innerInput{};
 
-        std::string tempString;
+        std::string tempString{};
 
-        int endPos{};
+        size_t endPos{};
         size_t firstPos{};
         size_t lastPos{};
         size_t count{0};
@@ -161,14 +161,13 @@ namespace sdds{
     template<typename T>
     void CentralUnit<T>::run(){
         for (size_t i = 0; i < m_size; i++){
-            if (m_items[i] != nullptr){
-                if((m_items[i]->get_current_job()->is_active())){
+            if (m_items[i]->get_current_job() != nullptr) {
+                m_items[i]->run();
+            }
+            else {
+                if (m_count > 0) {
+                    *m_items[i] += m_jobs[--m_count];
                     m_items[i]->run();
-                } else {
-                    if (m_count > 0){
-                        *m_items[i] += m_jobs[--m_count];
-                        m_items[i]->run();
-                    }
                 }
             }
         } 
