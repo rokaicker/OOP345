@@ -18,8 +18,8 @@ namespace sdds{
             } else {
                 try{
                     (*m_current)(m_power);
-                } catch (std::underflow_error()) {
-                    std::cout << "Processed over quote for " << *m_current << std::endl;
+                } catch (...) {
+                    std::cout << "Processed over quota for " << *m_current;
                     delete m_current;
                     m_current = nullptr;
                 }
