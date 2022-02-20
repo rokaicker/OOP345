@@ -36,4 +36,10 @@ namespace sdds{
         }
         return *this;
     }
+
+    void Processor::on_complete(void (*endFunc)(CentralUnit<Processor>& host, Processor* processor)){
+        m_endFunc = endFunc;
+    }
+
+    
 }
