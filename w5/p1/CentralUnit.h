@@ -29,7 +29,7 @@ namespace sdds{
         CentralUnit(CentralUnit&& src);
         //CentralUnit& operator=(const CentralUnit& src); // Should throw exception - NO COPYING
         CentralUnit& operator=(CentralUnit&& src);
-
+        ~CentralUnit();
         CentralUnit& operator+=(const std::string jobTitle);
         void run();
         bool has_jobs()const;
@@ -146,6 +146,14 @@ namespace sdds{
             src.m_count = 0;
         }
         return *this;
+    }
+
+    template<typename T>
+    CentralUnit<T>::~CentralUnit(){
+        for (size_t i = 0; i < m_size; i++){
+            delete m_items[i];
+        }
+        delete [] m_items;
     }
 
 
