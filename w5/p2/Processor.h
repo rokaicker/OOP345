@@ -37,7 +37,7 @@ namespace sdds{
         void on_complete(void (*endFunc)(CentralUnit<Processor>& host,Processor* processor));
         void on_error(std::function<void(Processor* processor)> errFunc);
 
-        void Processor::operator()();
+        void operator()();
         Job* free();
         void display(std::ostream& os = std::cout)const;
     };
