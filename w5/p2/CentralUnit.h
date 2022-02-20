@@ -115,8 +115,8 @@ namespace sdds{
             }
             m_items[m_size++] = new T(this, unitType, unitName, workCapacity);
             m_items[m_size-1]->on_complete(&CentralUnit<T>::complete_job());
-            std::function<void(T*)> lambda = [](T* T){
-                Job* temp = T->free();
+            std::function<void(T*)> lambda = [this](T* unit){
+                Job* temp = unit->free();
                 log << "Failed to complete job " << temp->name() << std::endl;
                 log << get_available_units() << " units available." << std::endl;
                 delete temp;
@@ -247,7 +247,7 @@ namespace sdds{
         m_newItems = nullptr;
         m_items[m_size] = unit;
         m_items[m_size]->on_complete(&CentralUnit<T>::complete_job());
-        std::function<void(T*)> lambda = [](T* T){
+        std::function<void(T*)> lambda = [this](T* T){
             Job* temp = T->free();
             log << "Failed to complete job " << temp->name() << std::endl;
             log << get_available_units() << " units available." << std::endl;
