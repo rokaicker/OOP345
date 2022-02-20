@@ -40,6 +40,9 @@ namespace sdds{
     CentralUnit<T>::CentralUnit(std::string type, std::string fileName) : m_type{type} {               //char* fileName) : m_type{type} {
         std::string inputLine;
         std::string innerInput;
+
+        std::string tempString;
+
         int endPos{};
         size_t firstPos{};
         size_t lastPos{};
@@ -69,33 +72,29 @@ namespace sdds{
         while(getline(fs, inputLine)){
             for (int i = 0; i < 3; i++){
                 switch(i){
-                    
                     case 0:
                         endPos = inputLine.find('|');
                         innerInput = inputLine.substr(0,endPos);
-                        /*unitType = innerInput.erase(std::remove(innerInput.begin(), innerInput.end(), ' '), innerInput.end());*/
                         firstPos = innerInput.find_first_not_of(" ");
-                        innerInput.substr(firstPos);
-                        lastPos = innerInput.find_last_not_of(" ");
-                        innerInput.substr(0, lastPos+1);
+                        tempString = innerInput.substr(firstPos);
+                        lastPos = tempString.find_last_not_of(" ");
+                        unitType = tempString.substr(0, lastPos+1);
                         break;
                     case 1:
                         endPos = inputLine.find('|');
                         innerInput = inputLine.substr(0,endPos);
-                        /*unitName = innerInput.erase(std::remove(innerInput.begin(), innerInput.end(), ' '), innerInput.end());*/
                         firstPos = innerInput.find_first_not_of(" ");
-                        innerInput.substr(firstPos);
-                        lastPos = innerInput.find_last_not_of(" ");
-                        innerInput.substr(0, lastPos+1);
+                        tempString = innerInput.substr(firstPos);
+                        lastPos = tempString.find_last_not_of(" ");
+                        unitName = tempString.substr(0, lastPos+1);
                         break;
                     case 2:
                         endPos = inputLine.find('\n');
                         innerInput = inputLine.substr(0,endPos);
-                        /*workCapacityStr = innerInput.erase(std::remove(innerInput.begin(), innerInput.end(), ' '), innerInput.end());*/
                         firstPos = innerInput.find_first_not_of(" ");
-                        innerInput.substr(firstPos);
-                        lastPos = innerInput.find_last_not_of(" ");
-                        innerInput.substr(0, lastPos+1);
+                        tempString = innerInput.substr(firstPos);
+                        lastPos = tempString.find_last_not_of(" ");
+                        workCapacityStr = tempString.substr(0, lastPos+1);
                         break;
                 }
                 inputLine.erase(0,endPos+1);
@@ -162,8 +161,8 @@ namespace sdds{
     template<typename T>
     void CentralUnit<T>::run(){
         for (size_t i = 0; i < m_size; i++){
-            if (m_items[i]){
-                if(m_items[i]->get_current_job()->is_active()){
+            if (m_items[i] != nullptr){
+                if((m_items[i]->get_current_job()->is_active())){
                     m_items[i]->run();
                 } else {
                     if (m_count > 0){

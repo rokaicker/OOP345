@@ -73,7 +73,6 @@ int main(int argc, char** argv) {
     printLine();
 
     printHeader("RUN CPU");
-
     std::cout << "CPU run #1" << std::endl;
     cpu->run();
     std::cout << "CPU now has " << cpu->get_available_units() << " available units and has " << (cpu->has_jobs() ? "some pending" : "no") << " jobs after run #1." << std::endl;
