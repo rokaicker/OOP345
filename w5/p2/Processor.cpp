@@ -37,10 +37,6 @@ namespace sdds{
         return *this;
     }
 
-    void Processor::on_complete(void (*endFunc)(CentralUnit<Processor>& host, Processor* processor)){
-        m_endFunc = endFunc;
-    }
-
     void Processor::on_error(std::function<void(Processor* processor)> errFunc){
         m_errFunc = errFunc;
     }
@@ -49,11 +45,15 @@ namespace sdds{
         if (!(m_current->is_complete())){
             try{
                 (*m_current)(m_power);
-                if(m_current->is_complete()){
-                    m_endFunc(*m_host, this);
-                }
+
             } catch (...) {
                 m_errFunc(this);
+                return;
+            }
+            if(m_current->is_complete()){
+                if(m_endFunc != nullptr){
+                    (m_host->*m_endFunc)(*m_host, this);
+                }
             }
         }
     }
@@ -70,4 +70,9 @@ namespace sdds{
             os <<" processing " << m_current;
         }
     }
+  
+    std::ostream& operator<<(std::ostream& os, const Processor& P){
+        P.display(os);
+        return os;
+    };
 }
