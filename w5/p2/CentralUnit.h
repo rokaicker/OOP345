@@ -226,7 +226,7 @@ namespace sdds{
     void CentralUnit<T>::complete_job(CentralUnit<T>& CU,T* unit){
         Job* temp = unit->free();
         size_t availUnits = CU.get_available_units();
-        CU.log << "[COMPLETE] " << *temp << " using " << *unit << std::endl << availUnits << " units available.";
+        CU.log << "[COMPLETE] " << *temp << " using " << *unit << std::endl << availUnits << " units available." << std::endl;
         delete temp;
     }
 
