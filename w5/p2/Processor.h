@@ -21,7 +21,7 @@ namespace sdds{
         size_t m_power{};                           // Number of work units microprocessor can proces for job in single run 
         Job* m_current{nullptr};                    // Address of job currently assigned to microprocessor to be processed
 
-        void (*m_endFunc)(CentralUnit<Processor>& host,Processor* processor){nullptr}; // Stores address of funtion that will run once job finishes processing
+        void (CentralUnit<Processor>::*m_endFunc)(CentralUnit<Processor>& host,Processor* processor){nullptr}; // Stores address of funtion that will run once job finishes processing
         // void = return type of function, m_endFunc = name of pointer to function
 
         std::function<void(Processor* processor)> m_errFunc;                  // Function object that targets function to be run when an error occurs
@@ -34,17 +34,15 @@ namespace sdds{
         Processor& operator+=(Job*& newJob);                            // Assigns a job to processor
         Job* get_current_job() const {return m_current;};               // Returns current job assigned to processor
 
-        void on_complete(void (*endFunc)(CentralUnit<Processor>& host,Processor* processor));
+        void on_complete(void (CentralUnit<Processor>::*endFunc)(CentralUnit<Processor>& host,Processor* processor)){m_endFunc = endFunc;};
         void on_error(std::function<void(Processor* processor)> errFunc);
 
         void operator()();
         Job* free();
         void display(std::ostream& os = std::cout)const;
     };
-    std::ostream& operator<<(std::ostream& os, const Processor& P){
-        P.display(os);
-        return os;
-    };
+
+    std::ostream& operator<<(std::ostream& os, const Processor& P);
 }
 
 #endif
