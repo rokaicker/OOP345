@@ -41,8 +41,6 @@ namespace sdds{
         CentralUnit& operator+=(T* unit);
         T* operator[](const std::string jobTitle)const;
         void display()const;
-
-
     };
 
     template<typename T>
@@ -278,7 +276,7 @@ namespace sdds{
             log << "[";
             log.width(4);
             log.fill('0');
-            log << i + 1 << "]";
+            log << i + 1 << "] ";
             std::cout << *m_items[i] << std::endl;
         }
     }
