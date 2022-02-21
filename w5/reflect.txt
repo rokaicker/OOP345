@@ -1,0 +1,34 @@
+/*
+* Name: Rohan Kaicker
+* Seneca Email: rkaicker@myseneca.ca
+* Seneca Student ID: 119070217
+* Date: February 20, 2022
+*
+* I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
+*/
+
+The main issue I faced when finishing this workshop was in relation to function pointers and their use in templates.
+As the workshop tells us, we have to define a function pointer in our Processor.h file. 
+I originally defined this member as such:
+void (*m_endFunc)(CentralUnit<Processor>& host, Processor* processor){nullptr}. I was getting errors with compiling my program, and it was specifically pointing me to this. 
+I later realized, after significant googling of the error I would have to put to the template tag in front of m_endFunc, as shown below:
+void (CentralUnit<Processor>::*m_endFunc)(CentralUnit<Processor>& host, Processor* processor){nullptr}. 
+I also had to do the same thing for my Processor::on_complete() function.
+
+I would argue that the Jobs are the subjects.
+The Processor functions that interact with the Jobs are the events. 
+The CentralUnit is the observer. 
+
+This is because the Jobs are the actual things we are working with, and we check to see if they are completed or not. 
+The CentralUnit doesn't directly interact with the Jobs, but instead controls the Processors which in turn use the run() function to act on the Jobs. 
+
+We used a std::function object because we were using a lambda function that contains a capture (captures "this" centralunit object). 
+If the lambda function didn't contain a capture, we wouldn't have to use a std::function object. 
+The advantage of using the function object is that the implementation is significantly cleaner. 
+One of the downsides to std::function objcets is that they may use more memory instead of using virtual functions. 
+
+C++ templates can be used by simply using function pointers like we did for the completion function. 
+
+
+
+I am not sure how I would modify code to only report exceptions of the same data type. 
