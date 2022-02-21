@@ -238,13 +238,13 @@ namespace sdds{
         //  m_items = new T*[count];
         // m_items[i] = new T(this, unitType, unitName, workCapacity)
         // m_size++;
-        T** m_newItems = new T*[++m_size];
-        for (size_t i = 0; i < m_size - 1; i++){
+        T** m_newItems = new T*[m_size+1];
+        for (size_t i = 0; i < m_size; i++){
             m_newItems[i] = m_items[i];
         }
         delete [] m_items;
         m_items = m_newItems;
-        m_newItems = nullptr;
+        //m_newItems = nullptr;
         m_items[m_size] = unit;
         m_items[m_size]->on_complete(&CentralUnit<T>::complete_job);
         std::function<void(T*)> lambda = [this](T* unit){
@@ -254,6 +254,7 @@ namespace sdds{
             delete temp;
         };
         m_items[m_size]->on_error(lambda);
+        m_size++;
         return *this;
     }
 
@@ -272,7 +273,7 @@ namespace sdds{
 
     template<typename T>
     void CentralUnit<T>::display()const{
-        log << "Central " << m_type << " Unit list";
+        log << "Central " << m_type << " Unit list" << std::endl;
         for (size_t i = 0; i < m_size; i++){
             log << "[";
             log.width(4);
