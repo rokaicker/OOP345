@@ -225,9 +225,8 @@ namespace sdds{
     template<typename T>
     void CentralUnit<T>::complete_job(CentralUnit<T>& CU,T* unit){
         Job* temp = unit->free();
-        CU.log << "[COMPLETE] " << *temp << " using " << *unit;
         size_t availUnits = CU.get_available_units();
-        CU.log << availUnits << " units available.";
+        CU.log << "[COMPLETE] " << *temp << " using " << *unit << std::endl << availUnits << " units available.";
         delete temp;
     }
 
