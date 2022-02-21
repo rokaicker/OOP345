@@ -28,7 +28,7 @@ namespace sdds{
         os << "/";
         os.width(2);
         os << m_workUnits;
-        os << " remaining]" << std::endl;
+        os << " remaining]";
     }
 
     void Job::operator()(size_t workUnits){
