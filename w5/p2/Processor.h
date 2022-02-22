@@ -14,31 +14,51 @@
 #include <functional>
 
 namespace sdds{
+    class Processor;
+    typedef CentralUnit<Processor> Host;
+    using endFunc = void(Host::*)(Host&,Processor*);
+    using errFunc = std::function<void(Processor*)>;
+
     class Processor{
-        CentralUnit<Processor>* m_host{};   // Address of hosting central unit
-        std::string m_brand{};                      // Name of brand of microprocessor aka unit type
-        std::string m_code{};                       // Text description of microprocessor aka unit name                     
-        size_t m_power{};                           // Number of work units microprocessor can proces for job in single run 
-        Job* m_current{nullptr};                    // Address of job currently assigned to microprocessor to be processed
+        Host* m_host{};                     // Address of hosting central unit
+        std::string m_brand{};              // Name of brand of microprocessor aka unit type
+        std::string m_code{};               // Text description of microprocessor aka unit name                     
+        size_t m_power{};                   // Number of work units microprocessor can proces for job in single run 
+        Job* m_current{nullptr};            // Address of job currently assigned to microprocessor to be processed
 
-        void (CentralUnit<Processor>::*m_endFunc)(CentralUnit<Processor>& host,Processor* processor){nullptr}; // Stores address of funtion that will run once job finishes processing
+        // Stores address of funtion that will run once job finishes processing
         // void = return type of function, m_endFunc = name of pointer to function
+        // can also use void (Host::*m_endFunc)(Host& host,Processor* processor){nullptr};
+        endFunc m_endFunc{nullptr}; // instantiate a variable of type endFunc, and assign it to nullptr
 
-        std::function<void(Processor* processor)> m_errFunc;                  // Function object that targets function to be run when an error occurs
+        // The below Function object that targets function to be run when an error occurs
+        // can also use std::function<void(Processor* processor)> m_errFunc;     
+        errFunc m_errFunc{nullptr}; // instantiate a variable of type errFunc, and assign it to nullptr
 
     public:
-        Processor(CentralUnit<Processor>* host, std::string brand, std::string code, size_t power) : m_host{host}, m_brand{brand}, m_code{code}, m_power{power} {};
+        Processor(Host* host, std::string brand, std::string code, size_t power) : m_host{host}, m_brand{brand}, m_code{code}, m_power{power} {};
 
+
+        // Modifiers
         void run();
-        explicit operator bool() const {return m_current != nullptr;};  // True if microprocessor has a job assigned to it
-        Processor& operator+=(Job*& newJob);                            // Assigns a job to processor
-        Job* get_current_job() const {return m_current;};               // Returns current job assigned to processor
-
-        void on_complete(void (CentralUnit<Processor>::*endFunc)(CentralUnit<Processor>& host,Processor* processor)){m_endFunc = endFunc;};
-        void on_error(std::function<void(Processor* processor)> errFunc);
-
-        void operator()();
+        Processor& operator+=(Job*& newJob);    // Assigns a job to processor
+        void operator()();                      // Similar to run()
         Job* free();
+        /* 
+            The below member function sets m_endFunc to the function pointer passed. 
+            Can also use void on_complete(void (Host::*endFunc)(Host& host,Processor* processor)){m_endFunc = endFunc;};
+        */
+        void on_complete(endFunc func){m_endFunc = func;};
+
+        /*
+            The below function sets m_errFunc to the function object passed
+            Can also use void on_error(std::function<void(Processor* processor)> errFunc){m_errFunc = errFunc;};
+        */
+        void on_error(errFunc func){m_errFunc = func;};
+
+        // Queries
+        Job* get_current_job() const {return m_current;};               // Returns current job assigned to processor
+        explicit operator bool() const {return m_current != nullptr;};  // True if microprocessor has a job assigned to it
         void display(std::ostream& os = std::cout)const;
     };
 

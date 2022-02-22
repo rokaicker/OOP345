@@ -37,9 +37,6 @@ namespace sdds{
         return *this;
     }
 
-    void Processor::on_error(std::function<void(Processor* processor)> errFunc){
-        m_errFunc = errFunc;
-    }
 
     void Processor::operator()(){
         if (!(m_current->is_complete())){
