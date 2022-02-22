@@ -16,50 +16,74 @@
 #include <functional>
 
 namespace sdds{
+
+    #define MAX_JOBS 4                  // Max jobs that can be queued up in static m_jobs array
+
     template <typename T>
     class CentralUnit{
         std::string m_type{};           // Describes type of work central unit will coordinate
         T** m_items{nullptr};           // Dynamically allocated array of pointers to indivdual units of type T
-        Job* m_jobs[4]{};               // Statically allocated array of pointers to jobs that are queued up
+        Job* m_jobs[MAX_JOBS]{};        // Statically allocated array of pointers to jobs that are queued up
         size_t m_size{};                // Number of units hosted by central unit (number in m_items array)
         size_t m_count{};               // Number of jobs queued up and waiting to be handled (number in m_jobs array)
     public:
-        std::ostream& log{std::cout};
-        CentralUnit(std::string type, std::string fileName);                           //char* fileName);
-        CentralUnit(const CentralUnit& src);            // Should throw exception - NO COPYING
+        // Public data members
+        std::ostream& log{std::cout};   // Stores reference to ostream object, used for logging information
+
+
+        // Rule of 5, note that copy constructor will throw an exception, and copy assignment operator has been deleted to prevent copy operations
+        CentralUnit(std::string type, std::string fileName);                           
+        CentralUnit(const CentralUnit& src);            
         CentralUnit(CentralUnit&& src);
-        //CentralUnit& operator=(const CentralUnit& src); // Should throw exception - NO COPYING
+        CentralUnit& operator=(const CentralUnit& src) = delete; 
         CentralUnit& operator=(CentralUnit&& src);
         ~CentralUnit();
-        CentralUnit& operator+=(const std::string jobTitle);
-        void run();
-        bool has_jobs()const;
-        size_t get_available_units()const;
 
-        // New member functions/ overloads for p2
-        void complete_job(CentralUnit& CU,T* unit);
-        CentralUnit& operator+=(T* unit);
-        T* operator[](const std::string jobTitle)const;
-        void display()const;
+        // Modifiers
+        CentralUnit& operator+=(const std::string jobTitle);    // Adds job to m_jobs queue, if space available
+        CentralUnit& operator+=(T* unit);                       // Adds unit to m_items dynamic array
+        void run();                                             // Runs cycle for each unit in m_items array
+        void complete_job(CentralUnit& CU,T* unit);             // Called memory allocated for job once unit has completed the job
+
+        // Queries
+        bool has_jobs()const;                                   // TRUE if units in m_items have a job or if m_jobs has jobs queued up
+        size_t get_available_units()const;                      // Returns number of units in m_items that do not have a job
+        T* operator[](const std::string jobTitle)const;         // Searches through m_items array to see if there is a unit with the matching jobTitle, returns pointer to unit if found. Otherwise throws an error. 
+        void display()const;                                    // Displays central unit's current state 
+
+        /*
+        ltrim(), rtrim(), and trim() work in conjunction to remove leading and trailing spaces from a string that has been passed to them. 
+        If a string is passed to these functinos that only contains "spaces", an empty string will be returned.
+        */
+        std::string ltrim(const std::string &str){
+            size_t start = str.find_first_not_of(" ");
+            return (start == std::string::npos) ? "" : str.substr(start);
+        }
+
+        std::string rtrim(const std::string &str){
+            size_t end = str.find_last_not_of(" ");
+            return (end == std::string::npos) ? "" : str.substr(0,end + 1);
+        }
+
+        std::string trim(const std::string &str){
+            return rtrim(ltrim(str));
+        }
+
     };
 
     template<typename T>
-    CentralUnit<T>::CentralUnit(std::string type, std::string fileName) : m_type{type} {               //char* fileName) : m_type{type} {
+    CentralUnit<T>::CentralUnit(std::string type, std::string fileName) : m_type{type} {
         std::string inputLine{};
         std::string innerInput{};
-
-        std::string tempString{};
-
-        size_t endPos{};
-        size_t firstPos{};
-        size_t lastPos{};
-        size_t count{0};
         std::string unitType;
         std::string unitName;
         std::string workCapacityStr;
-        size_t workCapacity;
 
-        
+        size_t endPos{};
+        size_t count{0};
+        size_t workCapacity{};
+
+        // Open file based on passed fileName string. If open, count the number of lines (aka number of units)
         std::ifstream fs(fileName);
         if (!fs.is_open()){
             throw std::invalid_argument("File cannot be opened.");
@@ -70,11 +94,21 @@ namespace sdds{
             ++count;
         }while(fs);
 
+        // Dynamically allocate m_items to be an array of T pointers to a size of count
         m_items = new T*[count];
         count = 0;
 
+        // Clear error flags in file, and go back to beginning
         fs.clear();
         fs.seekg(std::ios::beg);
+
+        /*
+            The below code will go through each line of the file. For each line it will run 3 iterations to pull the unit type, unit name, and work capacity. If the work capacity is unable to convert from a string to an integer, it will be assigned a default value of "1".
+
+            Then, a new T object in the m_items array will be dynamically allocated using a 4-arg constructor, that we assume has been defined for an object of type T. 
+
+            We then pass call back functions in the form of a function pointer and a function object to the T object, which we assume to have members "on_complete" and "on_error".
+        */
 
         while(getline(fs, inputLine)){
             for (int i = 0; i < 3; i++){
@@ -82,26 +116,17 @@ namespace sdds{
                     case 0:
                         endPos = inputLine.find('|');
                         innerInput = inputLine.substr(0,endPos);
-                        firstPos = innerInput.find_first_not_of(" ");
-                        tempString = innerInput.substr(firstPos);
-                        lastPos = tempString.find_last_not_of(" ");
-                        unitType = tempString.substr(0, lastPos+1);
+                        unitType = trim(innerInput);
                         break;
                     case 1:
                         endPos = inputLine.find('|');
                         innerInput = inputLine.substr(0,endPos);
-                        firstPos = innerInput.find_first_not_of(" ");
-                        tempString = innerInput.substr(firstPos);
-                        lastPos = tempString.find_last_not_of(" ");
-                        unitName = tempString.substr(0, lastPos+1);
+                        unitName = trim(innerInput);
                         break;
                     case 2:
                         endPos = inputLine.find('\n');
                         innerInput = inputLine.substr(0,endPos);
-                        firstPos = innerInput.find_first_not_of(" ");
-                        tempString = innerInput.substr(firstPos);
-                        lastPos = tempString.find_last_not_of(" ");
-                        workCapacityStr = tempString.substr(0, lastPos+1);
+                        workCapacityStr = trim(innerInput);
                         break;
                 }
                 inputLine.erase(0,endPos+1);
@@ -128,12 +153,6 @@ namespace sdds{
     CentralUnit<T>::CentralUnit(const CentralUnit& src){
         throw std::exception();
     }
-
-    // Throwing exception when copy assignment operator called 
-    /*template<typename T>this
-    CentralUnit<T>& CentralUnit<T>::operator=(const CentralUnit& src){
-        throw std::exception();
-    }*/
 
     // Move constructor
     template<typename T>
@@ -163,6 +182,7 @@ namespace sdds{
         return *this;
     }
 
+    // The CentralUnit destructor first goes through the m_items array, and deallocates each unit. Then the dynamic array itself is deallocated. 
     template<typename T>
     CentralUnit<T>::~CentralUnit(){
         for (size_t i = 0; i < m_size; i++){
@@ -171,13 +191,41 @@ namespace sdds{
         delete [] m_items;
     }
 
-
     template<typename T>
     CentralUnit<T>& CentralUnit<T>::operator+=(const std::string jobTitle){
-        if (m_count == 4){
+        if (m_count == MAX_JOBS){
             throw std::string("Job Queue Full");
         }
         m_jobs[m_count++] = new Job(jobTitle);
+        return *this;
+    }
+
+    /* 
+    Below a new T unit is added to the dynamic array m_items.
+    A temporary dynamic array of type T* must be first be created, by incrementing m_size by 1. 
+    The contents of the old array are then copied into the new array. 
+    The old dynamic array is then deallocated, and set to the value of the new one. 
+    The last position in the array is then set to to the incoming Unit. 
+    The subsequent call-back functions are then assigned to the incoming unit, as was done in the constructor
+    */
+    template<typename T>
+    CentralUnit<T>& CentralUnit<T>::operator+=(T* unit){
+        T** m_newItems = new T*[m_size+1];
+        for (size_t i = 0; i < m_size; i++){
+            m_newItems[i] = m_items[i];
+        }
+        delete [] m_items;
+        m_items = m_newItems;
+        m_items[m_size] = unit;
+        m_items[m_size]->on_complete(&CentralUnit<T>::complete_job);
+        std::function<void(T*)> lambda = [this](T* unit){
+            Job* temp = unit->free();
+            log << "Failed to complete job " << temp->name() << std::endl;
+            log << get_available_units() << " units available." << std::endl;
+            delete temp;
+        };
+        m_items[m_size]->on_error(lambda);
+        m_size++;
         return *this;
     }
 
@@ -185,17 +233,23 @@ namespace sdds{
     void CentralUnit<T>::run(){
         for (size_t i = 0; i < m_size; i++){
             if (m_items[i]->get_current_job() != nullptr) {
-                //m_items[i]->run(); commented out to run as functor
-                (*m_items[i])();
+                (*m_items[i])();        // Functor notation, but can also use m_items[i]->run()
             }
             else {
                 if (m_count > 0) {
                     *m_items[i] += m_jobs[--m_count];
-                    //m_items[i]->run(); commented out to run as functor
-                    (*m_items[i])();
+                    (*m_items[i])();    // Functor notation, but can also use m_items[i]->run()
                 }
             }
         } 
+    }
+
+    template<typename T>
+    void CentralUnit<T>::complete_job(CentralUnit<T>& CU,T* unit){
+        Job* temp = unit->free();
+        size_t availUnits = CU.get_available_units();
+        CU.log << "[COMPLETE] " << *temp << " using " << *unit << std::endl << availUnits << " units available." << std::endl;
+        delete temp;
     }
 
     template<typename T>
@@ -205,7 +259,6 @@ namespace sdds{
         for (size_t i = 0; i < m_size; i++){
             if (m_items[i]->get_current_job() != nullptr){
                 unitCheck = true;
-                break;
             }
         }
         return (queueCheck || unitCheck);
@@ -222,39 +275,6 @@ namespace sdds{
         return count;
     }
     
-    template<typename T>
-    void CentralUnit<T>::complete_job(CentralUnit<T>& CU,T* unit){
-        Job* temp = unit->free();
-        size_t availUnits = CU.get_available_units();
-        CU.log << "[COMPLETE] " << *temp << " using " << *unit << std::endl << availUnits << " units available." << std::endl;
-        delete temp;
-    }
-
-    template<typename T>
-    CentralUnit<T>& CentralUnit<T>::operator+=(T* unit){
-        //  m_items = new T*[count];
-        // m_items[i] = new T(this, unitType, unitName, workCapacity)
-        // m_size++;
-        T** m_newItems = new T*[m_size+1];
-        for (size_t i = 0; i < m_size; i++){
-            m_newItems[i] = m_items[i];
-        }
-        delete [] m_items;
-        m_items = m_newItems;
-        //m_newItems = nullptr;
-        m_items[m_size] = unit;
-        m_items[m_size]->on_complete(&CentralUnit<T>::complete_job);
-        std::function<void(T*)> lambda = [this](T* unit){
-            Job* temp = unit->free();
-            log << "Failed to complete job " << temp->name() << std::endl;
-            log << get_available_units() << " units available." << std::endl;
-            delete temp;
-        };
-        m_items[m_size]->on_error(lambda);
-        m_size++;
-        return *this;
-    }
-
     template<typename T>
     T* CentralUnit<T>::operator[](const std::string jobTitle)const{
         for (size_t i = 0; i < m_size; i++){
