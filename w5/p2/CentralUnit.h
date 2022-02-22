@@ -19,6 +19,13 @@ namespace sdds{
 
     #define MAX_JOBS 4                  // Max jobs that can be queued up in static m_jobs array
 
+    // 1 change all the types of interest to the template type
+    // 2 add the tag of template <type> to all the class name
+        // except, the name of the class right after the template
+        // except,all names of constructor definitions
+        // except,the name of destructor
+    // 3 do the same to all other scopes invloved in the template code
+
     template <typename T>
     class CentralUnit{
         std::string m_type{};           // Describes type of work central unit will coordinate
