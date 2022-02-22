@@ -45,11 +45,13 @@ namespace sdds{
 
             } catch (...) {
                 m_errFunc(this);
+                // NOTE: The syntax m_host->*m_errFunc would have caused an error here because we are not calling a function that is a member function of m_host. m_errFunc was simply a function that was passed
                 return;
             }
             if(m_current->is_complete()){
                 if(m_endFunc != nullptr){
                     (m_host->*m_endFunc)(*m_host, this);
+                    // NOTE: m_host->*m_endFunc syntax is required because we are calling a function that is a member function of the host type (CentralUnit). We need to use the ->* syntax because m_host is a pointer to type CentralUnit<Processor> and m_endFunc is a function pointer
                 }
             }
         }
