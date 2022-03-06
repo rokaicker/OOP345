@@ -6,11 +6,10 @@
 *
 * I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
 */
-#ifndef SDDS_FILESYSTEM_H
-#define SDDS_FILESYSTEM_H
+#include "Filesystem.h"
 
 namespace sdds{
-    
+    Filesystem::Filesystem(std::string fileName, std::string root){
+        
+    }
 }
-
-#endif
