@@ -51,12 +51,9 @@ namespace sdds{
                 break;
             }
             else if (e->type() == NodeType::DIR && recursionFlag){
-                Directory* D = dynamic_cast<Directory*>(e);
-                rsrc = D->find(name, flag);
+                rsrc = dynamic_cast<Directory*>(e)->find(name, flag);
             }
         }
         return rsrc;
     }
-
-
 }
