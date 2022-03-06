@@ -10,6 +10,14 @@
 
 namespace sdds{
     Filesystem::Filesystem(std::string fileName, std::string root){
-        
+        m_root = new Directory(root);
+        m_current = m_root;
+        std::string inputLine{};
+        std::ifstream fs(fileName);
+
+        while(getline(fs,inputLine)){
+            
+        }
+
     }
 }

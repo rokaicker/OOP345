@@ -9,6 +9,7 @@
 #ifndef SDDS_FILESYSTEM_H
 #define SDDS_FILESYSTEM_H
 
+#include <fstream>
 #include "Directory.h";
 #include "File.h";
 
