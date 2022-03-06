@@ -1,0 +1,34 @@
+/*
+* Name: Rohan Kaicker
+* Seneca Email: rkaicker@myseneca.ca
+* Seneca Student ID: 119070217
+* Date:
+*
+* I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
+*/
+
+#ifndef SDDS_DIRECTORY_H
+#define SDDS_DIRECTORY_H
+
+#include <vector>
+
+namespace sdds{
+    class Directory : public Resource {
+        std::vector<Resource*> m_contents{};
+
+    public:
+        void update_parent_path(const std::string& path);
+        NodeType type() const;
+        std::string path() const;
+        std::string name() const;
+        int count() const;
+        size_t size() const;
+
+        Directory& operator+=(Resource* newRes);
+        Resource* find(const std::string&, const std::vector<OpFlags>&);
+        
+
+    };
+}
+
+#endif
