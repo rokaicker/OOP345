@@ -15,15 +15,19 @@ namespace sdds{
     class File : public Resource {
         std::string m_contents{};
     public:
-        File(std::string name, std::string contents = "");
 
-        void update_parent_path(const std::string& path);
-        NodeType type() const;
-        std::string path() const;
-        std::string name() const;
-        int count () const;
-        size_t size() const;
+        // Custom Constructor
+        File(std::string name, std::string contents = "") : m_contents(contents){m_name = name;};
 
+        // Modifier
+        void update_parent_path(const std::string& path){m_parent_path = path;};
+
+        // Queries 
+        NodeType type() const {return NodeType::FILE;};
+        std::string path() const{return (m_parent_path + m_name);};
+        std::string name() const{return m_name;};
+        int count () const{return -1;};
+        size_t size() const{return m_contents.length();};
     }; 
 }
 
