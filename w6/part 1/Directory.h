@@ -19,7 +19,7 @@ namespace sdds{
 
     public:
         // Custom Constructor
-        Directory(std::string name){m_name = (name + "/");};
+        Directory(std::string name){m_name = (name);};
 
 
         // Rule of 5 - deleted copy/ move operations
@@ -27,7 +27,7 @@ namespace sdds{
         Directory(Directory&& src) = delete;
         Directory& operator=(const Directory& src) = delete;
         Directory& operator=(Directory&& src) = delete;
-        ~Directory();
+        ~Directory(){};
 
         // Modifier
         void update_parent_path(const std::string& path);
