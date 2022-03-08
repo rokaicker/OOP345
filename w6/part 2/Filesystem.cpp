@@ -10,6 +10,8 @@
 #include "Filesystem.h"
 
 namespace sdds{
+
+    // 2-arg Constructor 
     Filesystem::Filesystem(std::string fileName, std::string root){
         std::vector<sdds::OpFlags> oflags;
         oflags.push_back(sdds::OpFlags::RECURSIVE);
@@ -77,6 +79,43 @@ namespace sdds{
                 prevDir = "";
             }
         }
-
     }
+
+    // Destructor
+    Filesystem::~Filesystem(){
+        delete m_root;
+    }
+
+    // Move Constructor
+    Filesystem::Filesystem(Filesystem&& src){
+        *this = std::move(src);
+    }
+
+    // Move assignment operator
+    Filesystem& Filesystem::operator=(Filesystem&& src){
+        m_root = src.m_root;
+        m_current = src.m_current;
+        src.m_root = nullptr;
+        src.m_current = nullptr;
+        return *this;
+    }
+
+    Filesystem& Filesystem::operator+=(Resource* newRsrc){
+        *m_current += newRsrc;
+        return *this;
+    }
+
+    Directory* Filesystem::change_directory(const std::string& dirName){
+        if (dirName.empty()){
+            m_current = m_root;
+        } else {
+            Resource* temp = m_current->find(dirName);
+            if ( temp != nullptr && temp->type() == NodeType::DIR){
+                m_current = dynamic_cast<Directory*>(temp);
+            } else {
+                throw std::invalid_argument("Cannot change directory! " + dirName + " not found!");
+            }
+        }
+    }
+
 }
