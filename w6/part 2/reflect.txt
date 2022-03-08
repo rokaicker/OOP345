@@ -1,0 +1,15 @@
+/*
+* Name: Rohan Kaicker
+* Seneca Email: rkaicker@myseneca.ca
+* Seneca Student ID: 119070217
+* Date: March 08, 2022
+*
+* I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
+*/
+
+1) The main reason why we have to deallocate the dynamically allocated memory in our vector of resources is because a vector essentially acts like a dynamic array.
+But the vector can only allocate/ deallocate memory to the array as it increases/ decreases in size. It can't automatically deallocate memory for the dynamic objects inside of itself. This is also why we didn't have to use array deletion operator "delete []" anywhere, because the vector automatically takes care of it for us. 
+
+2) When calling Directory functions on a Resource object (for example, in the Filesystem() constructor when we call the overloaded "+=" operator), or in the recursive find() function), we have to specifically use dynamic casting to cast the resource object to a directory object to be able to use the function. This is because the functions that exist in the derived "Directory" class, don't exist as virtual functions in the base "Resource" class. If we didn't dynamically cast from the base class to the derived class, we would get an error from the compiler saying that the function is not a member of the base class (because it doesn't know to look in the derived classes).
+
+3) I beleive the main reason for using pointers to Resource objects instead of Resource objects themselves, is because we want to be accessing the same memory. If we were to use std::vector<sdds::Resource> we'd be creating copies of resource objects inside of our vector. This would be very inefficient. Also, another reason for pointers is that we are using a vector of dynamic objects so pointers are necessary. 
