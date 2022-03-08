@@ -10,8 +10,8 @@
 #define SDDS_FILESYSTEM_H
 
 #include <fstream>
-#include "Directory.h";
-#include "File.h";
+#include "Directory.h"
+#include "File.h"
 
 namespace sdds{
     class Filesystem {

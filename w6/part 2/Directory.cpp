@@ -83,7 +83,7 @@ namespace sdds{
         }
 
         // Exception checking
-        if (index == -1){
+        if ((int)index == -1){
             throw std::string(name + " does not exist in " + m_name);
         }
 

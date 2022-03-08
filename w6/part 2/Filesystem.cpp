@@ -116,6 +116,7 @@ namespace sdds{
                 throw std::invalid_argument("Cannot change directory! " + dirName + " not found!");
             }
         }
+        return m_current;
     }
 
 }

@@ -32,7 +32,7 @@ namespace sdds{
         // Modifier
         void update_parent_path(const std::string& path);
         Directory& operator+=(Resource* newRes);
-        void remove(const std::string& name, const std::vector<OpFlags>& flag);
+        void remove(const std::string& name, const std::vector<OpFlags>& flag = {});
 
 
         // Queries
@@ -41,8 +41,8 @@ namespace sdds{
         std::string name() const{return m_name;};
         int count() const{return m_contents.size();};
         size_t size() const;
-        Resource* find(const std::string&, const std::vector<OpFlags>& = {});
-        void display(std::ostream& os, const std::vector<FormatFlags>& flag) const;
+        Resource* find(const std::string&, const std::vector<OpFlags>& flag = {});
+        void display(std::ostream& os, const std::vector<FormatFlags>& flag = {}) const;
 
 
     };
