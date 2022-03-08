@@ -44,12 +44,10 @@ namespace sdds{
                     dEndPos = inputLine.find('/');
                     innerInput = inputLine.substr(0,dEndPos + 1);
                     inputLine.erase(0,dEndPos+1);
-                    if (!m_root->find(prevDir, oflags)){
+                    if (m_root->find(prevDir, oflags) == nullptr && (m_root->find(innerInput, oflags) == nullptr)){
                         *m_root += new Directory(innerInput);
-                        //prevDir = innerInput;
-                    } else {
+                    } else if (m_root->find(prevDir, oflags) != nullptr && (m_root->find(innerInput, oflags) == nullptr)) {
                         *dynamic_cast<Directory*>(m_root->find(prevDir, oflags)) += new Directory(innerInput);
-                        //prevDir = innerInput;
                     }
                     prevDir = innerInput;
                 }
@@ -64,24 +62,27 @@ namespace sdds{
                 fileContents = trim(fileContents);
 
                 // Checking/ Creating Directories
-                size_t dCount = std::count(filePath.begin(), inputLine.end(), '/');
+                size_t dCount = std::count(filePath.begin(), filePath.end(), '/');  
                 for (size_t i = 0; i < dCount; i++){
                     dEndPos = filePath.find('/');
-                    innerInput = filePath.substr(0,dEndPos + 1);
-                    filePath.erase(0,dEndPos+1);
-                    if (!m_root->find(prevDir, oflags)){
+                    innerInput = filePath.substr(0,dEndPos + 1);    
+                    filePath.erase(0,dEndPos+1);                    
+                    if (m_root->find(prevDir, oflags) == nullptr && m_root->find(innerInput, oflags) == nullptr){                  
                         *m_root += new Directory(innerInput);
-                        //prevDir = innerInput;
-                    } else {
+                    } else if (m_root->find(prevDir, oflags) != nullptr && (m_root->find(innerInput, oflags) == nullptr)){
                         *dynamic_cast<Directory*>(m_root->find(prevDir, oflags)) += new Directory(innerInput);
-                        //prevDir = innerInput;
                     }
                     prevDir = innerInput;
                 }
 
                 // Adding file contents
-                *dynamic_cast<Directory*>(m_root->find(prevDir, oflags)) += new File (filePath, fileContents);
-                prevDir = "";
+                if (prevDir.empty()) {
+                    *m_root += new File(filePath, fileContents);
+                }
+                else {
+                    *dynamic_cast<Directory*>(m_root->find(prevDir, oflags)) += new File(filePath, fileContents);
+                }
+                prevDir = "";                                                     
             }
         }
     }
