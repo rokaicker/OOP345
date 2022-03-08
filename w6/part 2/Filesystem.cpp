@@ -15,6 +15,10 @@ namespace sdds{
     Filesystem::Filesystem(std::string fileName, std::string root){
         std::vector<sdds::OpFlags> oflags;
         oflags.push_back(sdds::OpFlags::RECURSIVE);
+        std::ifstream fs(fileName);
+        if (!fs.is_open()){
+            throw std::string("can't open file");
+        }
 
         m_root = new Directory(root);
         m_current = m_root;
@@ -25,10 +29,11 @@ namespace sdds{
         std::string filePath{};
         std::string fileContents{};
         
-        std::ifstream fs(fileName);
 
         size_t dEndPos{};
         size_t fEndPos{};
+
+
 
         while(getline(fs,inputLine)){
             if (inputLine.find('|') == std::string::npos)
