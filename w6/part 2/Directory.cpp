@@ -10,6 +10,13 @@
 #include "Directory.h"
 
 namespace sdds{
+
+    Directory::~Directory(){
+        for (size_t i = 0; i < m_contents.size(); i++){
+            delete m_contents[i];
+        }
+    }
+
     void Directory::update_parent_path(const std::string& path){
         m_parent_path = path;
         for (auto e :m_contents){
@@ -56,4 +63,77 @@ namespace sdds{
         }
         return rsrc;
     }
+
+    void Directory::remove(const std::string& name, const std::vector<OpFlags>& flag){
+        bool recursionFlag = false;
+        for (auto e : flag){
+            if (e == OpFlags::RECURSIVE){
+                recursionFlag = true;
+                break;
+            }
+        }
+
+        // Checking if resource exists
+        size_t index = -1;
+        for (size_t i = 0; i < m_contents.size(); i++){
+            if (m_contents[i]->name() == name){
+                index = i;
+                break;
+            }
+        }
+
+        // Exception checking
+        if (index == -1){
+            throw std::string(name + " does not exist in " + m_name);
+        }
+
+        if ((m_contents[index]->type() == NodeType::DIR) && (recursionFlag == false)){
+            throw std::invalid_argument(name + " is a directory. Pass the recursive flag to delete directories.");
+        }
+        
+        // Deleting element
+        Resource* temp = m_contents[index];
+        m_contents.erase(m_contents.begin() + index);
+        delete temp;
+    }
+
+    void Directory::display(std::ostream& os, const std::vector<FormatFlags>& flag)const{
+        char type{};
+        bool longFlag = false;
+        for (auto e : flag){
+            if (e == FormatFlags::LONG){
+                longFlag = true;
+                break;
+            }
+        }
+
+        os << "Total size: " << size() << " bytes" << std::endl;
+        for (size_t i = 0; i < m_contents.size(); i++){
+            Resource* temp = m_contents[i];
+            if (temp->type() == NodeType::DIR){
+                type = 'D';
+            } else {
+                type = 'F';
+            }
+            os << type << " | ";
+            os.setf(std::ios::left);
+            os.width(15);
+            os << temp->name() << " |";
+            os.unsetf(std::ios::left);
+            if (longFlag){
+                if(temp->type() == NodeType::DIR){
+                    os << " ";
+                    os.width(2);
+                    os << temp->count() << " | ";
+                } else {
+                    os << "    | ";
+                }
+                os.width(4);
+                os << temp->size() << " bytes |";
+            }
+            os << std::endl;
+        }
+
+    }
+
 }
