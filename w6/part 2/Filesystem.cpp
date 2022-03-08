@@ -19,9 +19,14 @@ namespace sdds{
         std::string inputLine{};
         std::string innerInput{};
         std::string prevDir{};
+
+        std::string filePath{};
+        std::string fileContents{};
+        
         std::ifstream fs(fileName);
 
-        size_t endPos{};
+        size_t dEndPos{};
+        size_t fEndPos{};
 
         while(getline(fs,inputLine)){
             if (inputLine.find('|') == std::string::npos)
@@ -29,9 +34,9 @@ namespace sdds{
                 inputLine = trim(inputLine);
                 size_t dCount = std::count(inputLine.begin(), inputLine.end(), '/');
                 for (size_t i = 0; i < dCount; i++){
-                    endPos = inputLine.find('/');
-                    innerInput = inputLine.substr(0,endPos);
-                    inputLine.erase(0,endPos+1);
+                    dEndPos = inputLine.find('/');
+                    innerInput = inputLine.substr(0,dEndPos + 1);
+                    inputLine.erase(0,dEndPos+1);
                     if (!m_root->find(prevDir, oflags)){
                         *m_root += new Directory(innerInput);
                         //prevDir = innerInput;
@@ -39,16 +44,37 @@ namespace sdds{
                         *dynamic_cast<Directory*>(m_root->find(prevDir, oflags)) += new Directory(innerInput);
                         //prevDir = innerInput;
                     }
-                    if (i = dCount - 1){
-                        prevDir = "";
-                    } else {
-                        prevDir = innerInput;
-                    }
+                    prevDir = innerInput;
                 }
+                prevDir = "";
             }
             else
             {   // Block Executed if line is a file path
+                fEndPos = inputLine.find('|');
+                filePath = inputLine.substr(0, fEndPos);
+                filePath = trim(filePath);
+                fileContents = inputLine.substr(fEndPos + 1);
+                fileContents = trim(fileContents);
 
+                // Checking/ Creating Directories
+                size_t dCount = std::count(filePath.begin(), inputLine.end(), '/');
+                for (size_t i = 0; i < dCount; i++){
+                    dEndPos = filePath.find('/');
+                    innerInput = filePath.substr(0,dEndPos + 1);
+                    filePath.erase(0,dEndPos+1);
+                    if (!m_root->find(prevDir, oflags)){
+                        *m_root += new Directory(innerInput);
+                        //prevDir = innerInput;
+                    } else {
+                        *dynamic_cast<Directory*>(m_root->find(prevDir, oflags)) += new Directory(innerInput);
+                        //prevDir = innerInput;
+                    }
+                    prevDir = innerInput;
+                }
+
+                // Adding file contents
+                *dynamic_cast<Directory*>(m_root->find(prevDir, oflags)) += new File (filePath, fileContents);
+                prevDir = "";
             }
         }
 
