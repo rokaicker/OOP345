@@ -43,13 +43,13 @@ namespace sdds{
         // Rule of 5 - deleted copy/ operations
         Filesystem(const Filesystem& src) = delete;
         Filesystem(Filesystem&& src);
-        Filesystem& operator=(const Directory& src) = delete;
-        Filesystem& operator=(Directory&& src);
+        Filesystem& operator=(const Filesystem& src) = delete;
+        Filesystem& operator=(Filesystem&& src);
         ~Filesystem();
 
         // Modifiers
         Filesystem& operator+=(Resource* newRsrc);
-        Directory* change_directory(const std::string& dirName);
+        Directory* change_directory(const std::string& dirName = "");
 
 
         // Queries
