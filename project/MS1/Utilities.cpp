@@ -10,6 +10,9 @@
 #include <algorithm>
 
 namespace sdds{
+    // Initialize static variable
+    char Utilities::m_delimiter{};
+
     std::string Utilities::extractToken(const std::string &str, size_t &next_pos, bool &more){
         // Exception thrown if delimiter found at next_pos
         if (str.at(next_pos) == m_delimiter){
