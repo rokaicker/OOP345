@@ -10,6 +10,10 @@
 #include "Utilities.h"
 
 namespace sdds{
+    // Static Class Variables initialization
+    int Station::id_generator = 0;
+    size_t Station::m_widthField = 0;
+
     Station::Station(const std::string& inputLine){
         // delimiter used by utilities object already set by client code
         m_stationID = id_generator++;
