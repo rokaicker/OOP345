@@ -8,6 +8,7 @@
 
 #include "Utilities.h"
 #include <algorithm>
+#include <iostream>
 
 namespace sdds{
     // Initialize static variable
@@ -22,7 +23,8 @@ namespace sdds{
         size_t delimPos = str.find_first_of(str, next_pos);
         more = delimPos != std::string::npos;   // more = true if delim was found in string
         std::string returnStr = str.substr(next_pos, delimPos - next_pos);
-
+        returnStr = trim(returnStr);
+        std::cout << returnStr;
         if (returnStr.size() > m_widthField){
             m_widthField = returnStr.size();
         }
