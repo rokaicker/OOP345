@@ -129,7 +129,7 @@ namespace sdds{
                     os << "    | ";
                 }
                 os.width(4);
-                os << temp->size() << " bytes |";
+                os << temp->size() << " bytes | ";
             }
             os << std::endl;
         }
