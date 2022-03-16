@@ -55,7 +55,18 @@ namespace sdds
 
     void CovidCollection::display(std::ostream& os) const
     {
-        for_each(m_covid.begin(), m_covid.end(), [&os](Covid covid){os << covid << std::endl;});
+        int totalCases{};
+        int totalDeaths{};
+        for_each(m_covid.begin(), m_covid.end(), [&os, &totalCases, &totalDeaths](Covid covid)
+        {
+            totalCases += covid.m_numCases;
+            totalDeaths = covid.m_numDeaths;
+            os << covid << std::endl;
+        });
+
+        os << "----------------------------------------------------------------------------------------" << std::endl;
+        os << "|                                                 Total Cases Around the World:" << std::right << std::setw(7) << totalCases << " |" << std::endl;
+        os << "|                                                Total Deaths Around the World:" << std::right << std::setw(7) << totalDeaths << " |" << std::endl;
     }
 
 }
