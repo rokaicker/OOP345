@@ -15,6 +15,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <list>
 
 namespace sdds
 {
@@ -25,7 +26,7 @@ namespace sdds
         std::string m_variant{};
         int m_numCases{};
         int m_year{};
-        int m_numDeaths{};
+        int m_deaths{};
     };
 
     class CovidCollection
@@ -53,7 +54,15 @@ namespace sdds
         CovidCollection(const std::string fileName);
         void display(std::ostream& os) const;
         friend std::ostream& operator<<(std::ostream& os, const Covid& theCovid);
+
+        // Part 2 functions
+        void sort(const std::string field);                                     // Sort based on field passed
+        void cleanList();                                                       // Remove [None] from variant field
+        bool inCollection(const std::string variant) const;                     // Return true if any city contains variant
+        std::list<Covid> getListForCountry(const std::string country) const;    // Receive country name, return covid list of country
+        std::list<Covid> getListForVariant(const std::string variant) const;    // Receive variant name, return covid list of variants
     };
+    std::ostream& operator<<(std::ostream& os, const Covid& theCovid);
 }
 
 

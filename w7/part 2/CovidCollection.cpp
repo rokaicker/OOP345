@@ -30,7 +30,7 @@ namespace sdds
             temp.m_variant = trim(inputLine.substr(50,25));
             temp.m_year = stoi(trim(inputLine.substr(75,5)));
             temp.m_numCases = stoi(trim(inputLine.substr(80,5)));
-            temp.m_numDeaths = stoi(trim(inputLine.substr(85,5)));
+            temp.m_deaths = stoi(trim(inputLine.substr(85,5)));
             m_covid.push_back(temp);
         }
     }
@@ -49,7 +49,7 @@ namespace sdds
             os << " |       ";
         }
         os << " | " << std::right << std::setw(4) << theCovid.m_numCases;
-        os << " | " << std::right << std::setw(3) << theCovid.m_numDeaths << " |";
+        os << " | " << std::right << std::setw(3) << theCovid.m_deaths << " |";
         return os;
     }
 
@@ -60,13 +60,63 @@ namespace sdds
         for_each(m_covid.begin(), m_covid.end(), [&os, &totalCases, &totalDeaths](Covid covid)
         {
             totalCases += covid.m_numCases;
-            totalDeaths = covid.m_numDeaths;
+            totalDeaths += covid.m_deaths;
             os << covid << std::endl;
         });
 
         os << "----------------------------------------------------------------------------------------" << std::endl;
         os << "|                                                 Total Cases Around the World:" << std::right << std::setw(7) << totalCases << " |" << std::endl;
         os << "|                                                Total Deaths Around the World:" << std::right << std::setw(7) << totalDeaths << " |" << std::endl;
+    }
+
+    void CovidCollection::sort(const std::string field)
+    {
+        if (field == "country")
+        {
+            std::sort(m_covid.begin(), m_covid.end(), [](const Covid& cov1, const Covid& cov2){return cov1.m_country < cov2.m_country;});
+        }
+        else if (field == "variant")
+        {
+            std::sort(m_covid.begin(), m_covid.end(), [](const Covid& cov1, const Covid& cov2){return cov1.m_variant < cov2.m_variant;});
+        }
+        else if (field == "cases")
+        {
+            std::sort(m_covid.begin(), m_covid.end(), [](const Covid& cov1, const Covid& cov2){return cov1.m_numCases < cov2.m_numCases;});
+        }
+        else if (field == "deaths")
+        {
+            std::sort(m_covid.begin(), m_covid.end(), [](const Covid& cov1, const Covid& cov2){return cov1.m_deaths < cov2.m_deaths;});
+        }
+    }
+
+    void CovidCollection::cleanList()
+    {
+        std::transform(m_covid.begin(), m_covid.end(),m_covid.begin(), [](Covid& cov){ 
+            if (cov.m_variant == "[None]")
+            {
+                cov.m_variant = "";
+            }
+            return cov;
+        });
+    }
+
+    bool CovidCollection::inCollection(const std::string variant) const
+    {
+        return std::any_of(m_covid.begin(), m_covid.end(), [variant](const Covid& cov){return cov.m_variant == variant;});
+    }
+
+    std::list<Covid> CovidCollection::getListForCountry(const std::string country) const
+    {
+        std::list<Covid> covidList{};
+        std::copy_if(m_covid.begin(), m_covid.end(), std::back_inserter(covidList),[country](const Covid& cov){return cov.m_country == country;});
+        return covidList;
+    }
+
+    std::list<Covid> CovidCollection::getListForVariant(const std::string variant) const
+    {
+        std::list<Covid> covidList{};
+        std::remove_copy_if(m_covid.begin(), m_covid.end(), std::back_inserter(covidList), [variant](const Covid& cov){return cov.m_variant != variant;});
+        return covidList;
     }
 
 }
