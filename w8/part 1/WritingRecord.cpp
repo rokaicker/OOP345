@@ -15,16 +15,21 @@ namespace sdds {
 			for (size_t j = 0; j < sal.size(); j++){
 				if (emp[i].id == sal[j].id){
 					// If same id exists, create new dynamic employee wage
-					EmployeeWage* temp = new EmployeeWage(emp[i].name, sal[j].salary);
+					//EmployeeWage* temp = new EmployeeWage(emp[i].name, sal[j].salary);
+					EmployeeWage temp(emp[i].name, sal[j].salary);
 					// Validation of EmployeeWage based on salary and SIN(ID)
-					temp->rangeValidator();	// This returns nothing, but if validation fails an exception will be thrown and the below code won't be executed
+					temp.rangeValidator();	// This returns nothing, but if validation fails an exception will be thrown and the below code won't be executed
+					EmployeeWage* tempD = new EmployeeWage(emp[i].name, sal[j].salary);
+
 					if(activeEmp.luhn(emp[i].id)){
-						activeEmp += temp;
+						activeEmp += tempD;
 					} else {
+						delete tempD;
+						tempD = nullptr;
 						throw std::string ("The employee SIN did not pass the Luhn algorithm");
 					}
-					delete temp;
-					temp = nullptr;
+					delete tempD;
+					tempD = nullptr;
 					break;	// break down to get out of the inner for loop and move onto the next iteration in the outer for loop
 				}
 			}
