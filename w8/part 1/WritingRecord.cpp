@@ -12,7 +12,7 @@ namespace sdds {
 		// Recall that generatinglist objects have had index operator overloaded and size() returns the size of the vector member
 
 		for (size_t i = 0; i < emp.size(); i++) {
-			for (size_t j = 0; i < sal.size(); i++){
+			for (size_t j = 0; j < sal.size(); j++){
 				if (emp[i].id == sal[j].id){
 					// If same id exists, create new dynamic employee wage
 					EmployeeWage* temp = new EmployeeWage(emp[i].name, sal[j].salary);
