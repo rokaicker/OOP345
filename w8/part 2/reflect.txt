@@ -1,0 +1,12 @@
+/*
+* Name: Rohan Kaicker
+* Seneca Email: rkaicker@myseneca.ca
+* Seneca Student ID: 119070217
+* Date: March 18, 2022
+*
+* I have done all the coding by myself and only copied the code that my professor provided to complete my workshops and assignments.
+*/
+The main issue that the smart pointer solved for me was the fact that I no longer had to worry about catching errors during the salary range validation. In writeRaw(), I had to make use of a try-catch block in my code to catch exceptions from rangeValidator(). If an exception was found, I would have to manually clear the memory from the new EmployeeWage object (to avoid memory leaks), and then continue throwing the error to main(). 
+If i didn't make use of this try-catch block, all that would happen is main() would catch the error, but the dynamically created EmployeeWage object would not have been automatically deleted (resulting in memory leak issues).
+
+The main syntax differences between writeRaw() and writeSmart() is that I did not have to manually delete the object created with the smart pointer. Smart pointers automatically took care of the deallocation, without creating memory leaks. This also resulted in significantly cleaner code. 
