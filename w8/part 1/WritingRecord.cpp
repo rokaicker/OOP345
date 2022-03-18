@@ -13,9 +13,9 @@ namespace sdds {
 
 		for (size_t i = 0; i < emp.size(); i++) {
 			for (size_t j = 0; i < sal.size(); i++){
-				if (emp[i].id == sal[i].id){
+				if (emp[i].id == sal[j].id){
 					// If same id exists, create new dynamic employee wage
-					EmployeeWage* temp = new EmployeeWage(emp[i].name, sal[i].salary);
+					EmployeeWage* temp = new EmployeeWage(emp[i].name, sal[j].salary);
 					// Validation of EmployeeWage based on salary and SIN(ID)
 					temp->rangeValidator();	// This returns nothing, but if validation fails an exception will be thrown and the below code won't be executed
 					if(activeEmp.luhn(emp[i].id)){
