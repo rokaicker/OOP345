@@ -14,13 +14,20 @@ namespace sdds {
 		for (size_t i = 0; i < emp.size(); i++) {
 			for (size_t j = 0; j < sal.size(); j++){
 				if (emp[i].id == sal[j].id){
+					
 					// If same id exists, create new dynamic employee wage
-					//EmployeeWage* temp = new EmployeeWage(emp[i].name, sal[j].salary);
-					EmployeeWage temp(emp[i].name, sal[j].salary);
-					// Validation of EmployeeWage based on salary and SIN(ID)
-					temp.rangeValidator();	// This returns nothing, but if validation fails an exception will be thrown and the below code won't be executed
 					EmployeeWage* tempD = new EmployeeWage(emp[i].name, sal[j].salary);
 
+					// Validation of EmployeeWage based on salary
+					try {
+						tempD->rangeValidator();
+					} catch (...) {
+						delete tempD;
+						tempD = nullptr;
+						throw;	// continue throwing so that the main() function can deal with the caught exception
+					}
+
+					// Validation of EmployeeWage based on SIN
 					if(activeEmp.luhn(emp[i].id)){
 						activeEmp += tempD;
 					} else {
