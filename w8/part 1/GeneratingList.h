@@ -43,10 +43,11 @@ namespace sdds {
 		// The logic for the Luhn algorithm was taken from the wikipedia page https://en.wikipedia.org/wiki/Luhn_algorithm#Example_for_validating_check_digit
 		bool luhn(std::string sin){
 			int numOfDigits = sin.length();
-			int sum = std::stoi(sin[numOfDigits-1]);	// The sum is initiailzed to the second last digit in the SIN (since the check number is already included we have to ignore the last number)
+			int sum = sin[numOfDigits-1] - '0';	
+			// The sum is initiailzed to the second last digit in the SIN (since the check number is already included we have to ignore the last number)
 			int parity = (numOfDigits - 2) % 2; 		// Basically this variable will help us in determining which digits need to be multiplied by 2
-			for (int i = 0; i <= nDigits -2; i++){
-				int digit = stoi(sin[i]);
+			for (int i = 0; i <= numOfDigits -2; i++){
+				int digit = sin[i] - '0';
 				if (i % 2 == parity){
 					digit = digit * 2;
 				}
@@ -55,7 +56,7 @@ namespace sdds {
 				}
 				sum = sum + digit;
 			}
-			return ((sum % 10) == 0);c
+			return ((sum % 10) == 0);
 		}
 
 		//TODO: Overload the += operator with a raw pointer
@@ -63,7 +64,7 @@ namespace sdds {
 
 		// Function below receivs an address to a T object. Then it pushes the object to the end of the list vector.
 		void operator+=(T* newObj){
-			list.push_back(*newObj(;)
+			list.push_back(*newObj);
 		}
 
 		void print(std::ostream& os) const {
