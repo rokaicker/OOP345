@@ -95,8 +95,8 @@ namespace sdds {
 		//Validates that the employee salary is within the range of 0 to 9999 (inclusive). 
 		//Reports an exception otherwise.
 		void rangeValidator() {
-			if (m_salary < 0 || m_salary > 9999){
-				throw std::string("Salary is not within the appropriate range");
+			if (m_salary < 0 || m_salary > 99999){
+				throw std::string("*** Employees salaray range is not valid");
 			}
 		}
 
