@@ -25,10 +25,10 @@ namespace sdds
 
     class CustomerOrder
     {
-        std::string m_name{};
-        std::string m_product{};
-        size_t m_cntItem{};
-        Item** m_lstItem{nullptr};
+        std::string m_name{};       // Customer Name
+        std::string m_product{};    // Name of product being assembled
+        size_t m_cntItem{};         // Count of number of items in customer order
+        Item** m_lstItem{nullptr};  // Dynamically allocated array that holds Item pointers
     public:
         static size_t m_widthField;
 
