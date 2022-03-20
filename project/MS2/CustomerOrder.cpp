@@ -38,4 +38,30 @@ namespace sdds
         if (m_widthField < util.getFieldWidth()) m_widthField = util.getFieldWidth();
     }
 
+    CustomerOrder::CustomerOrder(CustomerOrder&& src) noexcept
+    {
+        *this = std::move(src);
+    }
+
+    CustomerOrder& CustomerOrder::operator=(CustomerOrder&& src) noexcept
+    {
+        if (this != &src){
+            // Deallocate current resources
+            for (size_t i = 0u; i < m_cntItem; i++){
+                delete m_lstItem[i];
+            }
+            delete [] m_lstItem;
+            m_lstItem = src.m_lstItem;
+            m_name = src.m_name;
+            m_product = src.m_product;
+            m_cntItem = src.m_cntItem;
+
+            src.m_lstItem = nullptr;
+            src.m_name = "";
+            src.m_product = "";
+            src.m_cntItem = 0u;
+        }
+        return *this;
+    }
+
 }
