@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <iomanip>
+#include <vector>
 #include "CustomerOrder.h"
 
 namespace sdds
@@ -119,13 +120,18 @@ namespace sdds
     // fillItem() fills ONE item in current order that station handles
     void CustomerOrder::fillItem(Station& station, std::ostream& os)
     {
+        std::vector<std::string> itemsFilledOnce;   // vector that keeps track of which items have been filled in the current run of fillItem()
         for (size_t i = 0u; i < m_cntItem; i++){
             if ((station.getItemName() == m_lstItem[i]->m_itemName) && (station.getQuantity() > 0))
             {
-                m_lstItem[i]->m_serialNumber = station.getNextSerialNumber();
-                m_lstItem[i]->m_isFilled = true;
-                station.updateQuantity();
-                os << "Filled " << m_name << ", " << m_product << " [" << station.getItemName() << "]" << std::endl;
+                if (std::find(itemsFilledOnce.begin(), itemsFilledOnce.end(), station.getItemName()) == itemsFilledOnce.end())
+                {
+                    m_lstItem[i]->m_serialNumber = station.getNextSerialNumber();
+                    m_lstItem[i]->m_isFilled = true;
+                    itemsFilledOnce.push_back(station.getItemName());
+                    station.updateQuantity();
+                    os << "Filled " << m_name << ", " << m_product << " [" << station.getItemName() << "]" << std::endl;
+                }
             }
             else if ((station.getItemName() == m_lstItem[i]->m_itemName) && (station.getQuantity() == 0))
             {
