@@ -7,6 +7,7 @@
 //   and the content was created entirely by me.
 
 #include <algorithm>
+#include <iomanip>
 #include "CustomerOrder.h"
 
 namespace sdds
@@ -102,7 +103,17 @@ namespace sdds
 
     void CustomerOrder::display(std::ostream& os) const
     {
-
+        os << m_name << " - " << m_product << std::endl;
+        for (size_t i = 0u; i < m_cntItem; i++){
+            os << "[" << std::setw(6) << std::right << std::setfill('0') << m_lstItem[i]->m_serialNumber << "] ";
+            os << std::setw(m_widthField) << std::left << std::setfill(' ') << m_lstItem[i]->m_itemName << " - ";
+            if (m_lstItem[i]->m_isFilled){
+                os << "FILLED";
+            } else {
+                os << "TO BE FILLED";
+            }
+            os << std::endl;
+        }
     }
 
     // fillItem() fills ONE item in current order that station handles
