@@ -27,8 +27,8 @@ namespace sdds
         m_product = util.extractToken(str, pos, more);
 
         // Instantiating/ Filling dynamic array of Item pointers
-        // Number of items = number of delimiters + 1
-        m_cntItem = std::count(str.begin(), str.end(), util.getDelimiter()) + 1;
+        // Number of items = number of delimiters - 1
+        m_cntItem = std::count(str.begin(), str.end(), util.getDelimiter()) - 1;
         m_lstItem = new Item*[m_cntItem];
         for (size_t i = 0u; i < m_cntItem; i++){
             std::string itemName = util.extractToken(str,pos,more);
