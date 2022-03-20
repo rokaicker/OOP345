@@ -9,6 +9,9 @@
 #ifndef SDDS_CUSTOMERORDER_H
 #define SDDS_CUSTOMERORDER_H
 #include <string>
+#include <iostream>
+#include "Station.h"
+#include "Utilities.h"
 
 namespace sdds
 {
@@ -47,7 +50,6 @@ namespace sdds
         // Modifier Functions
         void fillItem(Station& station, std::ostream& os);
     };
-
 }
 
 #endif // SDDS_CUSTOMERORDER_H
