@@ -130,7 +130,7 @@ namespace sdds
                     m_lstItem[i]->m_isFilled = true;
                     itemsFilledOnce.push_back(station.getItemName());
                     station.updateQuantity();
-                    os << "Filled " << m_name << ", " << m_product << " [" << station.getItemName() << "]" << std::endl;
+                    os << "    Filled " << m_name << ", " << m_product << " [" << station.getItemName() << "]" << std::endl;
                 }
             }
             else if ((station.getItemName() == m_lstItem[i]->m_itemName) && (station.getQuantity() == 0))
