@@ -116,7 +116,7 @@ namespace sdds
                 station.updateQuantity();
                 os << "Filled " << m_name << ", " << m_product << " [" << station.getItemName() << "]" << std::endl;
             }
-            else if ((station.getItemName() == m_lstItem[i]->m_itemName) && (station.getQuantity() < 0))
+            else if ((station.getItemName() == m_lstItem[i]->m_itemName) && (station.getQuantity() == 0))
             {
                 os << "Unable to fill " << m_name << ", " << m_product << " [" << station.getItemName() << "]" << std::endl;
             }
