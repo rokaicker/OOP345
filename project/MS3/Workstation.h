@@ -29,7 +29,7 @@ namespace sdds
         // Modifiers
         void fill(std::ostream& os);
         bool attemptToMoveOrder();
-        void setNextStation(Workstation* station);
+        void setNextStation(Workstation* station = nullptr);
         Workstation& operator+=(CustomerOrder&& newOrder);
         
         // Queries
