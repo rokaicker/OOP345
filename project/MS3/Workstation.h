@@ -14,9 +14,9 @@
 namespace sdds
 {
     // Global Variable Declaration
-    extern std::deque<CustomerOrder> g_pending;
-    extern std::deque<CustomerOrder> g_completed;
-    extern std::deque<CustomerOrder> g_incomplete;
+    extern std::deque<CustomerOrder> g_pending;         // this is worked on by ms3.cpp
+    extern std::deque<CustomerOrder> g_completed;       // this is worked on by attemptToMoveOrder()
+    extern std::deque<CustomerOrder> g_incomplete;      // this is worked on by attemptToMoveOrder()
 
     class Workstation : public Station
     {
