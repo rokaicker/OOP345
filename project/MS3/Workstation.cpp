@@ -10,6 +10,11 @@
 
 namespace sdds
 {
+    // Global Variable Initializations
+    std::deque<CustomerOrder> g_pending{};
+    std::deque<CustomerOrder> g_completed{}; 
+    std::deque<CustomerOrder> g_incomplete{}; 
+    
     // Fills front order if m_orders is not empty
     void Workstation::fill(std::ostream& os)
     {
