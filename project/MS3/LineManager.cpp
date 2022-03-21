@@ -14,7 +14,29 @@ namespace sdds
 {
     LineManager::LineManager(const std::string& file, const std::vector<Workstation*>& stations)
     {
+        Utilities util{};
+        bool more = true;
+        size_t pos = 0u;
+        std::string inputLine{};
+        std::string innerInput{};
 
+        char currentDelim = Utilities::getDelimiter();  // Storing current delimiter, will reset delimiter once constructor complete
+        Utilities::setDelimiter('|');                   // Set delimiter to '|' as indicated in AssemblyLine.txt format
+
+        Workstation* nextStation{nullptr};
+        Workstation* firstStation{nullptr};
+
+        std::ifstream fs(file);
+        if(!fs.is_open()){
+            throw std::string("Can't Open File " + file);
+        }
+
+        while(getline(fs, inputLine))
+        {
+
+        }
+
+        Utilities::setDelimiter(currentDelim);
     }
 
     // Reorders workstations in m_activeLine to be in sequential order
