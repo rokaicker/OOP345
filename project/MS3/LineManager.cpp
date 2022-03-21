@@ -24,7 +24,6 @@ namespace sdds
         Utilities::setDelimiter('|');                   // Set delimiter to '|' as indicated in AssemblyLine.txt format
 
         Workstation* nextStation{nullptr};
-        Workstation* firstStation{nullptr};
         Workstation* inputWorkstation{nullptr};
         std::string nextStationStr{};
         std::string firstStationStr{};
