@@ -53,21 +53,65 @@ namespace sdds
         }
 
         // Look for first station (first station will not be the "next station" for any other station)
-        Workstation* currentIteration{nullptr};
+        //  Create a vector of all "next stations"
+        std::vector<std::string> nextStations;
+        for_each(m_activeLine.begin(), m_activeLine.end(), 
+            [&nextStations](Workstation* src){
+                if (src->getNextStation() != nullptr){
+                    nextStations.push_back(src->getNextStation()->getItemName());
+                }
+            });
+        // Compare m_activeLine names to nextStations, any name that doesn't exist in nextStations will be the first station
+        // Below the program goes through every workstation in m_activeLine and compares the workstation name to the vector of names in nextStations. 
+        // If the none of the elements in nextStations have a name equal to the current workstation iteration in m_activeLine, this means that workstation must be the first station. 
+        for_each(m_activeLine.begin(), m_activeLine.end(), 
+            [&](Workstation* wrkstn){
+                if(std::none_of(nextStations.begin(), nextStations.end(), 
+                    [&](std::string name){
+                        return name == wrkstn->getItemName();
+                    })){
+                        m_firstStation = wrkstn;
+                    }
+            });
 
-        Utilities::setDelimiter(currentDelim);
+        Utilities::setDelimiter(currentDelim);  // reset delimiter to original delimiter
+
+        // ms3.cpp moves all orders to g_pending right before construction of the line manager
+        m_cntCustomerOrder = g_pending.size();
     }
 
     // Reorders workstations in m_activeLine to be in sequential order
     void LineManager::reorderStations()
     {
-
+        std::vector<Workstation*> temp;
+        temp.push_back(m_firstStation);
+        Workstation* currentStation = m_firstStation->getNextStation();
+        do {
+            temp.push_back(currentStation);
+            currentStation = currentStation->getNextStation();
+        }while (currentStation != nullptr);
+        m_activeLine = temp;
     }
 
-    // Performs one iteration of operationson all workstations in m_activeLine
+    // Performs one iteration of operations all workstations in m_activeLine
     bool LineManager::run(std::ostream& os)
     {
-
+        bool check =false;
+        static int currentIteration = 1;
+        os << "Line Manager Iteration: " << currentIteration++ << std::endl;
+        *m_firstStation += std::move(g_pending.front());
+        std::for_each(m_activeLine.begin(), m_activeLine.end(),
+            [&](Workstation* src){
+                src->fill(os);
+            });
+        std::for_each(m_activeLine.begin(), m_activeLine.end(),
+            [&](Workstation* src){
+                src->attemptToMoveOrder();
+            });
+        if (g_pending.size() == 0){
+            check = true;
+        }
+        return check;
     }
 
     // Displays all active stations on assembly line in current order
