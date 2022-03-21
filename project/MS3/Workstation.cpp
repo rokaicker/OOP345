@@ -25,15 +25,25 @@ namespace sdds
 
     bool Workstation::attemptToMoveOrder()
     {
+        std::string workstationItemName = getItemName();        // The item that the current workstation handles
+        size_t workstationQuantity = getQuantity();             // Remaining quantity of item at current workstation
         bool orderMoved = false;
+        bool nextStationExists = (m_pNextStation != nullptr);   // True if the nextStation exists
+
         if (!m_orders.empty()){
-            if (m_pNextStation != nullptr){
-                
-            } else if (m_orders.front().isOrderFilled() && m_pNextStation == nullptr){
-
-            } else if (!(m_orders.front().isOrderFilled()) && m_pNextStation == nullptr){
-
+            if (((m_orders.front().isItemFilled(workstationItemName)) || workstationQuantity == 0) && nextStationExists){
+                // move to next station
+                orderMoved = true;
             }
+            else if (m_orders.front().isItemFilled(workstationItemName) && !nextStationExists){
+                // move to g_completed
+                orderMoved = true;
+            }
+            else if (workstationQuantity == 0 && !nextStationExists){
+                // move to g_incomplete
+                orderMoved = true;
+            }
+
         }
         return orderMoved;
     }
