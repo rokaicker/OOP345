@@ -25,14 +25,26 @@ namespace sdds
 
         Workstation* nextStation{nullptr};
         Workstation* firstStation{nullptr};
+        Workstation* inputWorkstation{nullptr};
+        std::string nextStationStr{};
+        std::string firstStationStr{};
+        std::string inputWorkstationStr{};
+
 
         std::ifstream fs(file);
         if(!fs.is_open()){
             throw std::string("Can't Open File " + file);
         }
-
+        // Read each line, get name of a workstation and it's next workstation (if it has a next workstation)
+        //      
         while(getline(fs, inputLine))
         {
+            inputWorkstationStr = util.extractToken(inputLine, pos, more);
+            if (more == true) {
+                nextStationStr = util.extractToken(inputLine, pos, more);
+            }
+
+
 
         }
 
