@@ -20,7 +20,22 @@ namespace sdds
 
     class Workstation : public Station
     {
+        std::deque<CustomerOrder> m_orders;
+        Workstation* m_pNextStation{nullptr};
+    public:
+        // 1-arg constructor
+        Workstation(std::string& str) : Station(str){};
+
+        // Modifiers
+        void fill(std::ostream& os);
+        bool attemptToMoveOrder();
+        void setNextStation(Workstation* station);
+        Workstation& operator+=(CustomerOrder&& newOrder);
         
+        // Queries
+        Workstation* getNextStation() const {return m_pNextStation;};
+        void display(std::ostream& os) const;
+
     };
 
 
