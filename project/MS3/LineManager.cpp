@@ -36,17 +36,24 @@ namespace sdds
             throw std::string("Can't Open File " + file);
         }
         // Read each line, get name of a workstation and it's next workstation (if it has a next workstation)
-        //      
+        //      need to find which workstation in the stations vector has the same name
         while(getline(fs, inputLine))
         {
             inputWorkstationStr = util.extractToken(inputLine, pos, more);
+            inputWorkstation = *(std::find_if(stations.begin(), stations.end(),
+                [inputWorkstationStr](const Workstation* src){return src->getItemName() == inputWorkstationStr;}));
             if (more == true) {
                 nextStationStr = util.extractToken(inputLine, pos, more);
+                nextStation = *(std::find_if(stations.begin(), stations.end(), 
+                    [nextStationStr](const Workstation* src){return src->getItemName() == nextStationStr;}));
+                inputWorkstation->setNextStation(nextStation);
             }
-
-
-
+            // Pushing inputted work station to active line vector
+            m_activeLine.push_back(inputWorkstation);
         }
+
+        // Look for first station (first station will not be the "next station" for any other station)
+        
 
         Utilities::setDelimiter(currentDelim);
     }
