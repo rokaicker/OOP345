@@ -53,7 +53,7 @@ namespace sdds
         }
 
         // Look for first station (first station will not be the "next station" for any other station)
-        
+        Workstation* currentIteration{nullptr};
 
         Utilities::setDelimiter(currentDelim);
     }
