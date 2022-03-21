@@ -22,7 +22,6 @@ namespace sdds
     //      If order requires no more service/ can't be filled do nothing
     //      If there is no next station, move it either into g_completed or g_incomplete
     //      If order was moved, return true, false otherwise.
-
     bool Workstation::attemptToMoveOrder()
     {
         std::string workstationItemName = getItemName();        // The item that the current workstation handles
@@ -32,19 +31,49 @@ namespace sdds
 
         if (!m_orders.empty()){
             if (((m_orders.front().isItemFilled(workstationItemName)) || workstationQuantity == 0) && nextStationExists){
-                // move to next station
+                // move to next station, use operator += overload (pass order as r-value reference)
+                // std::move returns rvalue reference of argument
+                *m_pNextStation += std::move(m_orders.front());
                 orderMoved = true;
             }
             else if (m_orders.front().isItemFilled(workstationItemName) && !nextStationExists){
                 // move to g_completed
+                g_completed.push_back(std::move(m_orders.front()));
                 orderMoved = true;
             }
             else if (workstationQuantity == 0 && !nextStationExists){
                 // move to g_incomplete
+                g_incomplete.push_back(std::move(m_orders.front()));
                 orderMoved = true;
             }
-
         }
         return orderMoved;
     }
+
+    // Store address of next station in m_pNextStation
+    void Workstation::setNextStation(Workstation* station)
+    {
+        m_pNextStation = station;
+    }
+
+    // Moves referenced CustomerOrder to back of queue
+    Workstation& Workstation::operator+=(CustomerOrder&& newOrder)
+    {
+        m_orders.push_back(std::move(newOrder));
+        return *this;
+    }
+
+    void Workstation::display(std::ostream& os) const
+    {
+        os << getItemName() << " --> ";
+        if (m_pNextStation == nullptr){
+            os << "End of Line";
+        } else {
+            os << m_pNextStation->getItemName();
+        }
+        os << std::endl;
+    }
+
+    
+
 }
