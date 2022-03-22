@@ -39,7 +39,7 @@ namespace sdds{
 
     void Station::display(std::ostream& os, bool full) const{
         os << std::setw(3) << std::right << std::setfill('0') << m_stationID << " | ";
-        os << std::setw(m_widthField) << std::left << std::setfill(' ') << m_itemName << " | ";
+        os << std::setw(m_widthField) << std::left << std::setfill(' ') << m_itemName << "  | ";
         os << std::setw(6) << std::right << std::setfill('0') << m_nextSerial << " | " << std::setfill(' ') ;
         if (full){
             os << std::setw(4) << std::right << m_itemsInStock << " | ";
