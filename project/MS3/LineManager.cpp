@@ -95,10 +95,11 @@ namespace sdds
     // Performs one iteration of operations all workstations in m_activeLine
     bool LineManager::run(std::ostream& os)
     {
-        bool check =false;
+        bool check = false;
         static int currentIteration = 1;
         os << "Line Manager Iteration: " << currentIteration++ << std::endl;
         *m_firstStation += std::move(g_pending.front());
+        g_pending.erase(g_pending.begin()); // need to erase the moved position
         std::for_each(m_activeLine.begin(), m_activeLine.end(),
             [&](Workstation* src){
                 src->fill(os);
