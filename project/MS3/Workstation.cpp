@@ -35,24 +35,26 @@ namespace sdds
         bool nextStationExists = (m_pNextStation != nullptr);   // True if the nextStation exists
 
         if (!m_orders.empty()){
-            if (((m_orders.front().isItemFilled(workstationItemName)) || workstationQuantity == 0) && nextStationExists){
-                // move to next station, use operator += overload (pass order as r-value reference)
-                // std::move returns rvalue reference of argument
-                *m_pNextStation += std::move(m_orders.front());
-                m_orders.erase(m_orders.begin()); // need to erase moved position
-                orderMoved = true;
-            }
-            else if (m_orders.front().isItemFilled(workstationItemName) && !nextStationExists){
-                // move to g_completed
-                g_completed.push_back(std::move(m_orders.front()));
-                m_orders.erase(m_orders.begin()); // need to erase moved position
-                orderMoved = true;
-            }
-            else if (workstationQuantity == 0 && !nextStationExists){
-                // move to g_incomplete
-                g_incomplete.push_back(std::move(m_orders.front()));
-                m_orders.erase(m_orders.begin()); // need to erase moved position
-                orderMoved = true;
+            if (nextStationExists){
+                if ((m_orders.front().isItemFilled(workstationItemName)) || workstationQuantity == 0){
+                    // move to next station, use operator += overload (pass order as r-value reference)
+                    // std::move returns rvalue reference of argument
+                    *m_pNextStation += std::move(m_orders.front());
+                    m_orders.erase(m_orders.begin()); // need to erase moved position
+                    orderMoved = true;
+                }
+            } else {
+                if (m_orders.front().isOrderFilled()){
+                    // move to g_completed
+                    g_completed.push_back(std::move(m_orders.front()));
+                    m_orders.erase(m_orders.begin()); // need to erase moved position
+                    orderMoved = true;
+                } else if(m_orders.front().isItemFilled(workstationItemName) || workstationQuantity == 0){
+                    // move to g_incomplete
+                    g_incomplete.push_back(std::move(m_orders.front()));
+                    m_orders.erase(m_orders.begin()); // need to erase moved position
+                    orderMoved = true;
+                }
             }
         }
         return orderMoved;
