@@ -108,7 +108,18 @@ namespace sdds
             [&](Workstation* src){
                 src->attemptToMoveOrder();
             });
-        if (g_pending.size() == 0){
+        /*if (g_pending.size() == 0){
+            check = true;
+        }*/
+        /* objects containing customer orders include:
+                1) g_pending
+                2) g_completed
+                3) g_incomplete
+                4) each workstation also has m_orders
+            total customer orders = m_cntCustomerOrder (lineManager membervariable)
+            at the end of the program all customer orders should be in g_completed and g_incomplete (their final destinations, they never move out of there)
+        */
+        if ((g_completed.size() + g_incomplete.size()) == m_cntCustomerOrder){
             check = true;
         }
         return check;
