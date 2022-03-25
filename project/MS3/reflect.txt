@@ -1,0 +1,18 @@
+// Name: Rohan Kaicker
+// Seneca Student ID: 119070217
+// Seneca email: rkaicker@myseneca.ca
+// Date of completion: March 22, 2022
+//
+// I confirm that I am the only author of this file
+//   and the content was created entirely by me.
+
+
+Overall, this project really helped me understand the use of the new contains that we learned about in OOP345, including <vector> and <deque>.
+Furthermore, the use of algorithms and container member functions greatly simplifies code incomparison to working with dynamic arrays. 
+For example, in the LineManager constructor, it was relatively simple to use the find_if() algorithm to set the "nextStation" to the corresponding station.
+
+One tricky thing I ran into in completing this milestone was in the LineManager::run() and Workstation::attemptToMoveOrder() functions.
+At first, I was simply "moving" the orders to a different container, but I was not doing anything about the spot left in the container. 
+This was causing memory issues for me. I realized that I would have to use the erase() member function to remove the "moved" position, and then the erase() function would actually take care of re-ordering the rest of the container automatically. 
+
+Overall, this project was really good for my learning experience. 
