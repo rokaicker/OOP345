@@ -107,7 +107,7 @@ namespace sdds
         os << m_name << " - " << m_product << std::endl;
         for (size_t i = 0u; i < m_cntItem; i++){
             os << "[" << std::setw(6) << std::right << std::setfill('0') << m_lstItem[i]->m_serialNumber << "] ";
-            os << std::setw(m_widthField) << std::left << std::setfill(' ') << m_lstItem[i]->m_itemName << " - ";
+            os << std::setw(m_widthField) << std::left << std::setfill(' ') << m_lstItem[i]->m_itemName << "  - ";
             if (m_lstItem[i]->m_isFilled){
                 os << "FILLED";
             } else {
@@ -120,22 +120,18 @@ namespace sdds
     // fillItem() fills ONE item in current order that station handles
     void CustomerOrder::fillItem(Station& station, std::ostream& os)
     {
-        std::vector<std::string> itemsFilledOnce;   // vector that keeps track of which items have been filled in the current run of fillItem()
         for (size_t i = 0u; i < m_cntItem; i++){
-            if ((station.getItemName() == m_lstItem[i]->m_itemName) && (station.getQuantity() > 0))
+            if ((station.getItemName() == m_lstItem[i]->m_itemName) && (station.getQuantity() > 0) && (m_lstItem[i]->m_isFilled == false))
             {
-                if (std::find(itemsFilledOnce.begin(), itemsFilledOnce.end(), station.getItemName()) == itemsFilledOnce.end())
-                {
-                    m_lstItem[i]->m_serialNumber = station.getNextSerialNumber();
-                    m_lstItem[i]->m_isFilled = true;
-                    itemsFilledOnce.push_back(station.getItemName());
-                    station.updateQuantity();
-                    os << "    Filled " << m_name << ", " << m_product << " [" << station.getItemName() << "]" << std::endl;
-                }
+                m_lstItem[i]->m_serialNumber = station.getNextSerialNumber();
+                m_lstItem[i]->m_isFilled = true;
+                station.updateQuantity();
+                os << "    Filled " << m_name << ", " << m_product << " [" << station.getItemName() << "]" << std::endl;
+                break;
             }
             else if ((station.getItemName() == m_lstItem[i]->m_itemName) && (station.getQuantity() == 0))
             {
-                os << "Unable to fill " << m_name << ", " << m_product << " [" << station.getItemName() << "]" << std::endl;
+                os << "    Unable to fill " << m_name << ", " << m_product << " [" << station.getItemName() << "]" << std::endl;
             }
         }
     }
