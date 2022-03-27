@@ -70,8 +70,14 @@ namespace sdds_ws9 {
 
 
 	// TODO You create implementation of function operator(). See workshop instructions for details . 
-	int ProcessData::operator()(std::string, double&, double&){
-
+	int ProcessData::operator()(std::string filename, double& avgVal, double& varVal){
+		computeAvgFactor(data, total_items, total_items, avgVal);
+		computeVarFactor(data, total_items, total_items, avgVal, varVal);
+		std::ofstream file(filename, std::ios::out|std::ios::binary);
+		file.write(reinterpret_cast<char*>(total_items), 4);
+		for (size_t i = 0; i < total_items; i++){
+			file.write(reinterpret_cast<char*>(data[i]), 4);
+		}
 	}
 
 
