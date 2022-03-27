@@ -74,9 +74,9 @@ namespace sdds_ws9 {
 		computeAvgFactor(data, total_items, total_items, avgVal);
 		computeVarFactor(data, total_items, total_items, avgVal, varVal);
 		std::ofstream file(filename, std::ios::out|std::ios::binary);
-		file.write(reinterpret_cast<char*>(total_items), 4);
+		file.write(reinterpret_cast<char*>(&total_items), 4);
 		for (int i = 0; i < total_items; i++){
-			file.write(reinterpret_cast<char*>(data[i]), 4);
+			file.write(reinterpret_cast<char*>(&data[i]), 4);
 		}
 		return 0;
 	}
