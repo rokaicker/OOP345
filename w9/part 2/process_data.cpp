@@ -31,9 +31,17 @@ namespace sdds_ws9 {
 		//         into variables "total_items" and "data". Don't forget to allocate
 		//         memory for "data".
 		//       The file is binary and has the format described in the specs.
-
-
-
+		std::ifstream file(filename, std::ios::in|std::ios::binary);
+		// First reading initial 4 bytes of file (to get total number of items)
+		file.read(reinterpret_cast<char*>(&total_items), 4);
+		
+		// Initializing dynamic array with size = total_items
+		data = new int [total_items];
+		size_t i = 0;
+		while (file){
+			file.read(reinterpret_cast<char*>(&data[i]), 4);
+			i++;
+		}
 
 		std::cout << "Item's count in file '"<< filename << "': " << total_items << std::endl;
 		std::cout << "  [" << data[0] << ", " << data[1] << ", " << data[2] << ", ... , "
@@ -68,8 +76,14 @@ namespace sdds_ws9 {
 	//   part of the data. Add computed variance-factors to obtain total variance.
 	// Save the data into a file with filename held by the argument fname_target. 
 	// Also, read the workshop instruction.
-
-
-
-
+	int ProcessData::operator()(std::string filename, double& avgVal, double& varVal){
+		computeAvgFactor(data, total_items, total_items, avgVal);
+		computeVarFactor(data, total_items, total_items, avgVal, varVal);
+		std::ofstream file(filename, std::ios::out|std::ios::binary);
+		file.write(reinterpret_cast<char*>(&total_items), 4);
+		for (int i = 0; i < total_items; i++){
+			file.write(reinterpret_cast<char*>(&data[i]), 4);
+		}
+		return 0;
+	}
 }
