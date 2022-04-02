@@ -83,7 +83,7 @@ namespace sdds_ws9 {
 		for (int i = 0; i < num_threads; i++){
 			int index = p_indices[i];
 			int sz = p_indices[i+1] - index;
-			compAvgFacThreads.push_back(std::thread(bindCompAvgFac, data[index], sz, std::ref(averages[i])));
+			compAvgFacThreads.push_back(std::thread(bindCompAvgFac, &data[index], sz, std::ref(averages[i])));
 		}
 		for (auto& thread : compAvgFacThreads){
 			thread.join();
@@ -99,7 +99,7 @@ namespace sdds_ws9 {
 		for (int i = 0; i < num_threads; i++){
 			int index = p_indices[i];
 			int sz = p_indices[i+1] - index;
-			compVarFacThreads.push_back(std::thread(bindCompVarFac, data[index], sz, std::ref(variances[i])));
+			compVarFacThreads.push_back(std::thread(bindCompVarFac, &data[index], sz, std::ref(variances[i])));
 		}
 		for (auto& thread : compVarFacThreads){
 			thread.join();
