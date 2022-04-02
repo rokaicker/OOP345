@@ -2,8 +2,10 @@
 // process_data.cpp
 // 2021/1/5 - Jeevan Pant
 
-
+#include <thread>
+#include <vector>
 #include "process_data.h"
+
 
 namespace sdds_ws9 {
 
@@ -77,7 +79,21 @@ namespace sdds_ws9 {
 	// Save the data into a file with filename held by the argument fname_target. 
 	// Also, read the workshop instruction.
 	int ProcessData::operator()(std::string filename, double& avgVal, double& varVal){
-		computeAvgFactor(data, total_items, total_items, avgVal);
+		
+		std::vector<std::thread> compAvgFacThreads;
+		auto bindCompAvgFac = std::bind(computeAvgFactor,std::placeholders::_1, std::placeholders::_2, total_items, std::placeholders::_4);
+		int partitionSz = total_items / num_threads;
+		for (int i = 0; i < num_threads; i++){
+			compAvgFacThreads.push_back(std::thread(bindCompAvgFac,(data + (i*partitionSz)), partitionSz, averages[i]));
+		}
+		for (auto& thread : compAvgFacThreads){
+			thread.join();
+		}
+		double totalAvg;
+		for (int i = 0; i < num_threads; i++){
+			totalAvg += averages[i];
+		}
+
 		computeVarFactor(data, total_items, total_items, avgVal, varVal);
 		std::ofstream file(filename, std::ios::out|std::ios::binary);
 		file.write(reinterpret_cast<char*>(&total_items), 4);
