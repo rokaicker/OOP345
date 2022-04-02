@@ -2,8 +2,6 @@
 // process_data.cpp
 // 2021/1/5 - Jeevan Pant
 
-#include <thread>
-#include <vector>
 #include "process_data.h"
 
 
@@ -81,10 +79,11 @@ namespace sdds_ws9 {
 	int ProcessData::operator()(std::string filename, double& avgVal, double& varVal){
 		
 		std::vector<std::thread> compAvgFacThreads;
-		auto bindCompAvgFac = std::bind(computeAvgFactor,std::placeholders::_1, std::placeholders::_2, total_items, std::placeholders::_4);
-		int partitionSz = total_items / num_threads;
+		auto bindCompAvgFac = std::bind(computeAvgFactor,std::placeholders::_1, std::placeholders::_2, total_items, std::placeholders::_3);
 		for (int i = 0; i < num_threads; i++){
-			compAvgFacThreads.push_back(std::thread(bindCompAvgFac,(data + (i*partitionSz)), partitionSz, averages[i]));
+			int index = p_indices[i];
+			int sz = p_indices[i+1] - index;
+			compAvgFacThreads.push_back(std::thread(bindCompAvgFac, data[index], sz, std::ref(averages[i])));
 		}
 		for (auto& thread : compAvgFacThreads){
 			thread.join();
@@ -96,9 +95,11 @@ namespace sdds_ws9 {
 		avgVal = totalAvg;
 
 		std::vector<std::thread> compVarFacThreads;
-		auto bindCompVarFac = std::bind(computeVarFactor, std::placeholders::_1, std::placeholders::_2, total_items, avgVal, std::placeholders::_5 );
+		auto bindCompVarFac = std::bind(computeVarFactor, std::placeholders::_1, std::placeholders::_2, total_items, avgVal, std::placeholders::_3 );
 		for (int i = 0; i < num_threads; i++){
-			compVarFacThreads.push_back(std::thread(bindCompVarFac, (data + (i*partitionSz)), partitionSz, variances[i]));
+			int index = p_indices[i];
+			int sz = p_indices[i+1] - index;
+			compVarFacThreads.push_back(std::thread(bindCompVarFac, data[index], sz, std::ref(variances[i])));
 		}
 		for (auto& thread : compVarFacThreads){
 			thread.join();
