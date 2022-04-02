@@ -93,8 +93,22 @@ namespace sdds_ws9 {
 		for (int i = 0; i < num_threads; i++){
 			totalAvg += averages[i];
 		}
+		avgVal = totalAvg;
 
-		computeVarFactor(data, total_items, total_items, avgVal, varVal);
+		std::vector<std::thread> compVarFacThreads;
+		auto bindCompVarFac = std::bind(computeVarFactor, std::placeholders::_1, std::placeholders::_2, total_items, avgVal, std::placeholders::_5 );
+		for (int i = 0; i < num_threads; i++){
+			compVarFacThreads.push_back(std::thread(bindCompVarFac, (data + (i*partitionSz)), partitionSz, variances[i]));
+		}
+		for (auto& thread : compVarFacThreads){
+			thread.join();
+		}
+		double totalVar;
+		for (int i = 0; i < num_threads; i++){
+			totalVar += variances[i];
+		}
+		varVal = totalVar;
+
 		std::ofstream file(filename, std::ios::out|std::ios::binary);
 		file.write(reinterpret_cast<char*>(&total_items), 4);
 		for (int i = 0; i < total_items; i++){
