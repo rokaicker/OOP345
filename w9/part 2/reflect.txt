@@ -1,0 +1,7 @@
+I beleive that the main benefit in using binary files is that there is no interpretation required on the text received (in terms of delimiters, etc.).
+We just have to worry about how many bytes certain pieces of data take. 
+The advantages of binding a function to arguments is that if have a function that takes a parameter, that will be constant for every run of the function in the program, we can just bind that parameter to the function without having to use that parameter everytime. 
+
+The main advantage of using multiple threads is the time saving in handling large computations. Whent he program ran on a single thread, my computer took about 4000 ms to solve it, then with 2 threads the time to solve dropped by more than half to about 1500 ms. 
+Multithreading was accomplished in this lab by creating a vector of threads, splitting the data into partitions, then passing the function object with the data range to the thread to be completed as its task.
+At the end, once the task was completed, all the threads were joined back to get the final data. 
