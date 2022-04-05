@@ -88,7 +88,7 @@ namespace sdds_ws9 {
 		for (auto& thread : compAvgFacThreads){
 			thread.join();
 		}
-		double totalAvg;
+		double totalAvg{};
 		for (int i = 0; i < num_threads; i++){
 			totalAvg += averages[i];
 		}
@@ -104,7 +104,7 @@ namespace sdds_ws9 {
 		for (auto& thread : compVarFacThreads){
 			thread.join();
 		}
-		double totalVar;
+		double totalVar{};
 		for (int i = 0; i < num_threads; i++){
 			totalVar += variances[i];
 		}
